@@ -18,6 +18,7 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
+import server from "../../index.js";
 
 const fileUploadCss = {
   cursor: "pointer",
@@ -63,7 +64,7 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        `/api/workspace/upload/${selectedWorkspace._id}`,
+        `${server}/api/workspace/upload/${selectedWorkspace._id}`,
         myForm,
         {
           onUploadProgress: (progress) => {

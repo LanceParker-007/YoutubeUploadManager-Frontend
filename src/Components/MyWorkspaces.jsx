@@ -5,6 +5,7 @@ import axios from "axios";
 import { AddIcon } from "@chakra-ui/icons";
 import WorkspacesLoading from "./WorkspacesLoading.jsx";
 import CreateWorkspaceModal from "./miscellaneous/CreateWorkspaceModal.jsx";
+import server from "../index.js";
 
 const MyWorkspaces = ({ fetchAgain }) => {
   const toast = useToast();
@@ -25,7 +26,7 @@ const MyWorkspaces = ({ fetchAgain }) => {
       };
 
       const { data } = await axios.get(
-        "/api/workspace/fetchallworkspaces",
+        `${server}/api/workspace/fetchallworkspaces`,
         config
       );
       setWorkspaces(data);

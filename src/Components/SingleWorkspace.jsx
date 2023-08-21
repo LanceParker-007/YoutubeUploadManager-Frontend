@@ -16,6 +16,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import UpdateWorkspaceModal from "./miscellaneous/UpdateWorkspaceModal";
 import UploadVideoOnYUMModal from "./miscellaneous/UploadVideoOnYUMModal";
 import LoginWithGoogle from "./miscellaneous/LoginWithGoogle";
+import server from "../index.js";
 
 const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedWorkspace, setSelectedWorkspace } =
@@ -29,7 +30,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
 
     try {
       const { data } = await axios.get(
-        `/api/workspace/allvideos/${selectedWorkspace._id}`,
+        `${server}/api/workspace/allvideos/${selectedWorkspace._id}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -54,7 +55,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        `/api/workspace/uploadvideotoyoutube`,
+        `${server}/api/workspace/uploadvideotoyoutube`,
         { selectedWorkspaceId, videoId },
         {
           headers: {

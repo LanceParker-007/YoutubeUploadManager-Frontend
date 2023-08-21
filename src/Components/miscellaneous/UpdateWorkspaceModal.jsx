@@ -21,6 +21,7 @@ import { useState } from "react";
 import UserBadgeItem from "./UserBadgeItem";
 import UserListItem from "../UserAvatar/UserListItem";
 import axios from "axios";
+import server from "../../index.js";
 
 const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -68,7 +69,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       };
 
       const { data } = await axios.put(
-        `/api/workspace/addusertoworkspace`,
+        `${server}/api/workspace/addusertoworkspace`,
         {
           workspaceId: selectedWorkspace._id,
           userToBeAddedId: user1._id,
@@ -117,7 +118,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       };
 
       const { data } = await axios.put(
-        `/api/workspace/removeuserfromworkspace`,
+        `${server}/api/workspace/removeuserfromworkspace`,
         {
           workspaceId: selectedWorkspace._id,
           userToBeRemovedId: user1._id,
@@ -159,7 +160,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       };
 
       const { data } = await axios.put(
-        `api/workspace/renameworkspace`,
+        `${server}/api/workspace/renameworkspace`,
         {
           workspaceId: selectedWorkspace._id,
           workspaceName: workspaceName,
@@ -208,7 +209,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       };
 
       const { data } = await axios.get(
-        `api/user/searchusers?search=${query}`,
+        `${server}api/user/searchusers?search=${query}`,
         config
       );
 

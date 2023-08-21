@@ -12,6 +12,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
+import server from "../../index";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -46,7 +47,7 @@ const Login = () => {
       };
 
       const { data } = await axios.post(
-        "/api/user/login",
+        `${server}/api/user/login`,
         { email, password },
         config
       );

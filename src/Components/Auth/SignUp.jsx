@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import server from "../../index.js";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -89,7 +90,7 @@ const SignUp = () => {
       };
 
       const { data } = await axios.post(
-        "/api/user/register",
+        `${server}/api/user/register`,
         { name, email, password, pic },
         config
       );

@@ -19,6 +19,7 @@ import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 import axios from "axios";
 import UserListItem from "../UserAvatar/UserListItem";
 import UserBadgeItem from "./UserBadgeItem";
+import server from "../../index.js";
 
 const GroupModalChat = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -46,7 +47,7 @@ const GroupModalChat = ({ children }) => {
       };
 
       const { data } = await axios.get(
-        `api/user/searchusers?search=${search}`,
+        `${server}/api/user/searchusers?search=${search}`,
         config
       );
 
@@ -83,7 +84,7 @@ const GroupModalChat = ({ children }) => {
       };
 
       const { data } = await axios.post(
-        "api/workspace/createworkspace",
+        `${server}/api/workspace/createworkspace`,
         {
           workspaceName: workspaceName,
           users: JSON.stringify(selectedUsers.map((u) => u._id)), //Since we cannot sent array
