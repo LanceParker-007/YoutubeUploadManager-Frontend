@@ -183,7 +183,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
           h={"100%"}
           w={"100%"}
         >
-          <Text fontSize={"3xl"} pb={3} fontFamily={"cursive"} color={"black"}>
+          <Text fontSize={"3xl"} pb={3} fontFamily={"fantasy"} color={"black"}>
             Click on a Workspace
           </Text>
         </Box>

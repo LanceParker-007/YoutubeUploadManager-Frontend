@@ -36,7 +36,7 @@ const HomePage = () => {
         borderRadius={"lg"}
         borderWidth={"1px"}
       >
-        <Heading fontFamily={"cursive"} fontSize={"2xl"} color={"black"}>
+        <Heading fontFamily={"fantasy"} fontSize={"2xl"} color={"black"}>
           Youtube Upload Manager
         </Heading>
       </Box>
