@@ -4,7 +4,7 @@ import { Box, Button, Tooltip } from "@chakra-ui/react";
 import { FaGoogle } from "react-icons/fa";
 
 const clientId = process.env.REACT_APP_CLIENT_ID;
-const redirectUri = "http://localhost:5000/google/callback";
+const redirectUri = process.env.REACT_APP_PROD_REDIRECT_URI;
 const scopes = ["https://www.googleapis.com/auth/youtube.upload"];
 
 const authorizationUrl = `https://accounts.google.com/o/oauth2/auth?${queryString.stringify(
