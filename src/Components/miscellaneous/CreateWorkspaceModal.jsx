@@ -164,14 +164,20 @@ const GroupModalChat = ({ children }) => {
             <Input
               required
               placeholder="Workspace Name"
-              mb={3}
+              mb={2}
               onChange={(e) => setWorkspaceName(e.target.value)}
             />
             {/* Second form to search users */}
-            <HStack w={"full"} p={0} justifyContent={"space-between"}>
+            <HStack
+              w={"full"}
+              p={0}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+              mb={2}
+            >
               <Input
                 placeholder="Search and add team members here"
-                mb={1}
+                mb={0}
                 onChange={(e) => {
                   setSearch(e.target.value);
                   if (e.target.value.length === 0) {
@@ -199,15 +205,15 @@ const GroupModalChat = ({ children }) => {
             {loading ? (
               <Spinner />
             ) : (
-              searchResult
-                ?.slice(0, 4)
-                .map((user) => (
+              <Box width={"full"} maxHeight={"40vh"} overflowY={"auto"}>
+                {searchResult?.map((user) => (
                   <UserListItem
                     key={user._id}
                     user={user}
                     handleFunction={() => handleGroup(user)}
                   />
-                ))
+                ))}
+              </Box>
             )}
           </ModalBody>
           <ModalFooter>
