@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  FormControl,
+  HStack,
   Input,
   Modal,
   ModalBody,
@@ -33,10 +33,7 @@ const GroupModalChat = ({ children }) => {
   // Append this new groupchat to the users chat list, so get chatState from ChatContextProvider
   const { user, workspaces, setWorkspaces } = useWorkspaceContext();
 
-  const handleSearch = async (query) => {
-    setSearch(query);
-    if (!query) return;
-
+  const handleSearch = async () => {
     try {
       setLoading(true);
 
@@ -103,6 +100,7 @@ const GroupModalChat = ({ children }) => {
       });
       setWorkspaceName("");
       setSelectedUsers([]);
+      setSearch("");
       setSearchResult([]);
     } catch (error) {
       toast({
@@ -113,6 +111,10 @@ const GroupModalChat = ({ children }) => {
         isClosable: true,
         position: "top",
       });
+      setWorkspaceName("");
+      setSelectedUsers([]);
+      setSearch("");
+      setSearchResult([]);
     }
   };
 
@@ -159,21 +161,29 @@ const GroupModalChat = ({ children }) => {
             alignItems={"center"}
           >
             {/* First form to create Group with respective name */}
-            <FormControl>
-              <Input
-                placeholder="Workspace Name"
-                mb={3}
-                onChange={(e) => setWorkspaceName(e.target.value)}
-              />
-            </FormControl>
+            <Input
+              required
+              placeholder="Workspace Name"
+              mb={3}
+              onChange={(e) => setWorkspaceName(e.target.value)}
+            />
             {/* Second form to search users */}
-            <FormControl>
+            <HStack w={"full"} p={0} justifyContent={"space-between"}>
               <Input
                 placeholder="Search and add team members here"
                 mb={1}
-                onChange={(e) => handleSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  if (e.target.value.length === 0) {
+                    setSearchResult([]);
+                  }
+                }}
               />
-            </FormControl>
+              <Button colorScheme="yellow" onClick={handleSearch}>
+                Search
+              </Button>
+            </HStack>
+
             {/* List of selected users which are selected from our search */}
             <Box w={"100%"} display={"flex"} flexWrap={"wrap"}>
               {selectedUsers &&
