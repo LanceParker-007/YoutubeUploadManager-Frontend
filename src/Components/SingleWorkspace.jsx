@@ -52,15 +52,16 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
 
   const uploadToYoutube = async (videoId) => {
     const selectedWorkspaceId = selectedWorkspace._id;
+    console.log(selectedWorkspaceId, videoId);
     try {
       setLoading(true);
       const { data } = await axios.post(
         `${server}/api/workspace/uploadvideotoyoutube`,
-        { selectedWorkspaceId, videoId },
+        { selectedWorkspaceId: selectedWorkspaceId, videoId: videoId },
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
