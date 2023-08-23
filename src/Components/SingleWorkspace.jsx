@@ -16,12 +16,14 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import UpdateWorkspaceModal from "./miscellaneous/UpdateWorkspaceModal";
 import UploadVideoOnYUMModal from "./miscellaneous/UploadVideoOnYUMModal";
 import LoginWithGoogle from "./miscellaneous/LoginWithGoogle";
+import WorkspacesLoading from "../Components/WorkspacesLoading";
 import server from "../index.js";
 
 const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedWorkspace, setSelectedWorkspace } =
     useWorkspaceContext();
   const [loading, setLoading] = useState(false);
+  const [loadingWorkspaceVideos, setLoadingWorkspaceVideos] = useState(false);
   const toast = useToast();
   const [displayVideos, setDisplayVideos] = useState([]);
 
@@ -29,6 +31,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     if (!selectedWorkspace) return;
 
     try {
+      setLoadingWorkspaceVideos(true);
       const { data } = await axios.get(
         `${server}/api/workspace/allvideos/${selectedWorkspace._id}`,
         {
@@ -39,6 +42,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
       );
 
       setDisplayVideos(data.videos);
+      setLoadingWorkspaceVideos(false);
     } catch (error) {
       toast({
         title: `Failed to fecth workspace videos`,
@@ -47,6 +51,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
         isClosable: true,
         position: "top",
       });
+      setLoadingWorkspaceVideos(false);
     }
   };
 
@@ -157,10 +162,10 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
             >
               All Videos Details
             </Heading>
-            {loading ? (
-              <Heading color={"black"}>Loading...</Heading>
+            {loadingWorkspaceVideos ? (
+              <WorkspacesLoading />
             ) : (
-              <Box padding={2} bg={"blackAlpha.500"} borderRadius={"md"}>
+              <Box padding={2} bg={"blackAlpha.400"} borderRadius={"md"}>
                 {selectedWorkspace &&
                   displayVideos.map((video) => (
                     // <Text color={"black"}>{video._id}</Text>

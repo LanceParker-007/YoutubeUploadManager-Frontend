@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useWorkspaceContext } from "../Context/WorkspaceProvider.js";
 import { Box, Button, Text, Stack, useToast } from "@chakra-ui/react";
 import axios from "axios";
@@ -16,9 +16,11 @@ const MyWorkspaces = ({ fetchAgain }) => {
     selectedWorkspace,
     setSelectedWorkspace,
   } = useWorkspaceContext();
+  const [loadingWorkspaces, setLoadingWorkspaces] = useState(false);
 
   const fetchWorkspaces = async () => {
     try {
+      setLoadingWorkspaces(true);
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -30,6 +32,7 @@ const MyWorkspaces = ({ fetchAgain }) => {
         config
       );
       setWorkspaces(data);
+      setLoadingWorkspaces(false);
     } catch (error) {
       toast({
         title: "Error occured",
@@ -39,6 +42,7 @@ const MyWorkspaces = ({ fetchAgain }) => {
         isClosable: true,
         position: "top-left",
       });
+      setLoadingWorkspaces(false);
     }
   };
 
@@ -94,22 +98,23 @@ const MyWorkspaces = ({ fetchAgain }) => {
         borderRadius={"lg"}
         overflowY={"hidden"}
       >
-        {workspaces ? (
+        {!loadingWorkspaces ? (
           <Stack>
-            {workspaces.map((workspace) => (
-              <Box
-                onClick={() => setSelectedWorkspace(workspace)}
-                cursor={"pointer"}
-                bg={selectedWorkspace === workspace ? "black" : "#e8e8e8"}
-                color={selectedWorkspace === workspace ? "white" : "black"}
-                px={3}
-                py={2}
-                borderRadius={"lg"}
-                key={workspace._id}
-              >
-                <Text>{workspace.workspaceName}</Text>
-              </Box>
-            ))}
+            {workspaces &&
+              workspaces.map((workspace) => (
+                <Box
+                  onClick={() => setSelectedWorkspace(workspace)}
+                  cursor={"pointer"}
+                  bg={selectedWorkspace === workspace ? "black" : "#e8e8e8"}
+                  color={selectedWorkspace === workspace ? "white" : "black"}
+                  px={3}
+                  py={2}
+                  borderRadius={"lg"}
+                  key={workspace._id}
+                >
+                  <Text>{workspace.workspaceName}</Text>
+                </Box>
+              ))}
           </Stack>
         ) : (
           <WorkspacesLoading />
