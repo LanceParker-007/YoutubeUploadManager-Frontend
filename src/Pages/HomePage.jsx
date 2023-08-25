@@ -8,22 +8,11 @@ import {
   Tabs,
   Heading,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React from "react";
 import Login from "../Components/Auth/Login";
 import SignUp from "../Components/Auth/SignUp";
-import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // const user = JSON.parse(localStorage.getItem("user"));
-    // //If user not logged in push it to "/" route
-    // if (user) {
-    //   return navigate("/workspaces");
-    // }
-  }, [navigate]);
-
   return (
     <Container maxW={"xl"} centerContent>
       <Box
@@ -36,7 +25,12 @@ const HomePage = () => {
         borderRadius={"lg"}
         borderWidth={"1px"}
       >
-        <Heading fontFamily={"fantasy"} fontSize={"2xl"} color={"black"}>
+        <Heading
+          fontFamily={"fantasy"}
+          fontSize={"2xl"}
+          color={"black"}
+          letterSpacing={1}
+        >
           Youtube Upload Manager
         </Heading>
       </Box>
@@ -85,7 +79,7 @@ const HomePage = () => {
       >
         *Only Google Accounts allowed by developer will be able to upload videos
         to youtube. <br />
-        *Since in demo mode, video size is limited to 10mb max.
+        *Since in demo mode, video size is limited to 40mb max.
       </Box>
     </Container>
   );

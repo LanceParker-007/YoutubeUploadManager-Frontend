@@ -5,6 +5,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Text,
   VStack,
   useToast,
 } from "@chakra-ui/react";
@@ -13,6 +14,29 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 import server from "../../index";
+import { FaGoogle } from "react-icons/fa";
+import queryString from "query-string";
+import { useEffect } from "react";
+import Cookies from "js-cookie";
+
+//Sign in with Google
+const clientId = process.env.REACT_APP_CLIENT_ID;
+const redirectUri = process.env.REACT_APP_PROD_SIGNIN_REDIRECT_URI;
+const scopes = [
+  "https://www.googleapis.com/auth/userinfo.profile",
+  "https://www.googleapis.com/auth/userinfo.email",
+];
+
+const authorizationUrl = `https://accounts.google.com/o/oauth2/auth?${queryString.stringify(
+  {
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    scope: scopes.join(" "),
+    response_type: "code",
+  }
+)}`;
+
+//--------------------------------
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -77,6 +101,26 @@ const Login = () => {
     }
   };
 
+  // Sign In with Google
+  const loginWithGoogle = () => {
+    window.location.href = authorizationUrl;
+  };
+  //------------------------------------------
+
+  useEffect(() => {
+    setLoading(true);
+    let userLoginDetail = Cookies.get("userLoginDetail");
+    if (userLoginDetail) {
+      userLoginDetail = userLoginDetail.substring(2);
+      userLoginDetail = JSON.parse(userLoginDetail);
+      setLoading(false);
+      setUser(userLoginDetail);
+      localStorage.setItem("userInfo", JSON.stringify(userLoginDetail));
+      navigate("/workspaces");
+    }
+    setLoading(false);
+  }, [navigate, setUser]);
+
   return (
     <VStack spacing={"5px"}>
       <form
@@ -84,7 +128,9 @@ const Login = () => {
         style={{ width: "100%", padding: "6px" }}
       >
         <FormControl id="loginEmail" isRequired>
-          <FormLabel htmlFor="inputloginEmail">Email</FormLabel>
+          <FormLabel htmlFor="inputloginEmail" mb={0}>
+            Email
+          </FormLabel>
           <Input
             id="inputloginEmail"
             type="text"
@@ -93,10 +139,13 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
             borderColor={"blackAlpha.600"}
+            autoComplete="true"
           />
         </FormControl>
-        <FormControl id="loginPassword" isRequired>
-          <FormLabel htmlFor="inputLoginPassword">Password</FormLabel>
+        <FormControl id="loginPassword" isRequired mt={2}>
+          <FormLabel htmlFor="inputLoginPassword" mb={0}>
+            Password
+          </FormLabel>
           <InputGroup>
             <Input
               id="inputLoginPassword"
@@ -106,6 +155,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               borderColor={"blackAlpha.600"}
+              autoComplete="true"
             />
             <InputRightElement width={"4.5rem"} backgroundColor={"green.400"}>
               <Button
@@ -122,7 +172,7 @@ const Login = () => {
 
         <Button
           isLoading={loading}
-          my={4}
+          mt={4}
           type="submit"
           width={"100%"}
           colorScheme="yellow"
@@ -130,6 +180,16 @@ const Login = () => {
           Login
         </Button>
       </form>
+      <Text fontFamily={"fantasy"}>OR</Text>
+      <Button
+        leftIcon={<FaGoogle />}
+        colorScheme="red"
+        width={"97%"}
+        onClick={loginWithGoogle}
+      >
+        {" "}
+        Sign in with Google
+      </Button>
     </VStack>
   );
 };

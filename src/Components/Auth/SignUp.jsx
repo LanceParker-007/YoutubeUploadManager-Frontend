@@ -66,6 +66,7 @@ const SignUp = () => {
     }
   };
 
+  // Normal Register
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -185,10 +186,10 @@ const SignUp = () => {
         </FormControl>
         <Button
           isLoading={loading}
-          my={4}
+          mt={4}
           type="submit"
-          size={"lg"}
           colorScheme="yellow"
+          width={"full"}
         >
           Sign Up
         </Button>

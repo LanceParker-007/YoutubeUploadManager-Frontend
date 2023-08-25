@@ -5,18 +5,21 @@ import App from "./App";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { WorkspaceContextProvider } from "./Context/WorkspaceProvider";
 import { BrowserRouter as Router } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
 
 root.render(
   <Router>
-    <WorkspaceContextProvider>
-      <ChakraProvider theme={theme}>
-        <ColorModeScript />
-        <App />
-      </ChakraProvider>
-    </WorkspaceContextProvider>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
+      <WorkspaceContextProvider>
+        <ChakraProvider theme={theme}>
+          <ColorModeScript />
+          <App />
+        </ChakraProvider>
+      </WorkspaceContextProvider>
+    </GoogleOAuthProvider>
   </Router>
 );
 

@@ -18,11 +18,12 @@ import UploadVideoOnYUMModal from "./miscellaneous/UploadVideoOnYUMModal";
 import LoginWithGoogle from "./miscellaneous/LoginWithGoogle";
 import WorkspacesLoading from "../Components/WorkspacesLoading";
 import server from "../index.js";
+import Cookies from "js-cookie";
 
 const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedWorkspace, setSelectedWorkspace } =
     useWorkspaceContext();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [loadingWorkspaceVideos, setLoadingWorkspaceVideos] = useState(false);
   const toast = useToast();
   const [displayVideos, setDisplayVideos] = useState([]);
@@ -58,7 +59,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const uploadToYoutube = async (videoId) => {
     const selectedWorkspaceId = selectedWorkspace._id;
     try {
-      setLoading(true);
+      // setLoading(true);
       const { data } = await axios.post(
         `${server}/api/workspace/uploadvideotoyoutube`,
         { selectedWorkspaceId: selectedWorkspaceId, videoId: videoId },
@@ -78,9 +79,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
         isClosable: true,
         position: "top",
       });
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       toast({
         title: "Video upload to Yt failed",
         description: error.message,
@@ -96,6 +95,8 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     fetchAllVideoDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWorkspace]);
+
+  const accessToken = Cookies.get("accessToken");
 
   return (
     <>
@@ -136,21 +137,22 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
           {/* All uploaded videos details */}
           <Divider height={"0.1rem"} bg={"red"} margin={4} />
           {/* Youtube Authorizrtion: Admin needs to sign in to youtube */}
-          {selectedWorkspace.workspaceAdmin._id === user._id && (
-            <HStack
-              width={"full"}
-              border={"1px solid black"}
-              height={"6rem"}
-              p={2}
-              justifyContent={"space-between"}
-            >
-              <LoginWithGoogle />
+          {!accessToken &&
+            selectedWorkspace.workspaceAdmin._id === user._id && (
+              <HStack
+                width={"full"}
+                border={"1px solid black"}
+                height={"6rem"}
+                p={2}
+                justifyContent={"space-between"}
+              >
+                <LoginWithGoogle />
 
-              <Text color={"red"}>
-                Admin needs to login in with the Yt channel google channel
-              </Text>
-            </HStack>
-          )}
+                <Text color={"red"}>
+                  Admin needs to login in with the Yt channel google channel
+                </Text>
+              </HStack>
+            )}
 
           {/* All Videos Details */}
           <Box width={"full"} overflowY={"auto"}>

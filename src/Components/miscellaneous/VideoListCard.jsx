@@ -13,11 +13,12 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
+import Cookies from "js-cookie";
 
 const VideoListCard = ({ video, uploadToYoutube }) => {
-  const { user, selectedWorkspace } = useWorkspaceContext();
-
+  const { user, selectedWorkspace, handleLogin } = useWorkspaceContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const accessToken = Cookies.get("accessToken");
 
   return (
     <>
@@ -29,33 +30,47 @@ const VideoListCard = ({ video, uploadToYoutube }) => {
         borderRadius={"0.6rem"}
         mb={1}
       >
-        <Text>{video.title}</Text>
-        <Text onClick={onOpen} cursor={"pointer"} color={"red"}>
-          Watch Video
-        </Text>
-        {selectedWorkspace.workspaceAdmin._id === user._id &&
-          (video.status ? (
-            <Button colorScheme={"whatsapp"} cursor={"not-allowed"}>
-              Uploaded to Youtube
-            </Button>
+        <div style={{ textAlign: "left", width: "40%" }}>
+          <Text>{video.title}</Text>
+        </div>
+        <div style={{ textAlign: "left", width: "30%" }}>
+          <Text onClick={onOpen} cursor={"pointer"} color={"red"}>
+            Watch Video
+          </Text>
+        </div>
+
+        <div style={{ textAlign: "right", width: "30%" }}>
+          {selectedWorkspace.workspaceAdmin._id === user._id && accessToken ? (
+            video.status ? (
+              <Button colorScheme={"whatsapp"} cursor={"not-allowed"}>
+                Uploaded to Youtube
+              </Button>
+            ) : (
+              <Button
+                colorScheme={"yellow"}
+                onClick={() => uploadToYoutube(video._id)}
+              >
+                Upload to Youtube
+              </Button>
+            )
           ) : (
-            <Button
-              colorScheme={"yellow"}
-              onClick={() => uploadToYoutube(video._id)}
-            >
-              Upload to Youtube
-            </Button>
-          ))}
-        {selectedWorkspace.workspaceAdmin._id !== user._id &&
-          (video.status ? (
-            <Button colorScheme={"whatsapp"} cursor={"not-allowed"}>
-              Uploaded to Youtube
-            </Button>
-          ) : (
-            <Button colorScheme={"red"} cursor={"not-allowed"}>
-              Action Needed
-            </Button>
-          ))}
+            selectedWorkspace.workspaceAdmin._id === user._id && (
+              <Button colorScheme={"yellow"} onClick={handleLogin}>
+                Login to Yt Account
+              </Button>
+            )
+          )}
+          {selectedWorkspace.workspaceAdmin._id !== user._id &&
+            (video.status ? (
+              <Button colorScheme={"whatsapp"} cursor={"not-allowed"}>
+                Uploaded to Youtube
+              </Button>
+            ) : (
+              <Button colorScheme={"red"} cursor={"not-allowed"}>
+                Action Needed
+              </Button>
+            ))}
+        </div>
       </HStack>
       {/* Modal to watch video  */}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>

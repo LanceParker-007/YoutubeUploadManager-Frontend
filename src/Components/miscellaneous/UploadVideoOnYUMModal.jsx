@@ -1,5 +1,7 @@
 import {
   Button,
+  CircularProgress,
+  CircularProgressLabel,
   Heading,
   Input,
   Modal,
@@ -9,7 +11,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Progress,
   Tooltip,
   VStack,
   useDisclosure,
@@ -93,6 +94,7 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
       setDescription("");
       setVideo("");
       setVideoPrev("");
+      setVideoUploaded(0);
     } catch (error) {
       setLoading(false);
       toast({
@@ -178,7 +180,11 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
                     ></video>
                   </>
                 )}
-                <Progress my={1} value={videoUploaded} size={"lg"} />
+                <CircularProgress value={videoUploaded} color="green.400">
+                  <CircularProgressLabel>
+                    {videoUploaded}%
+                  </CircularProgressLabel>
+                </CircularProgress>
                 <Button
                   isLoading={loading}
                   w={"full"}
