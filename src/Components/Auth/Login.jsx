@@ -89,7 +89,7 @@ const Login = () => {
       setLoading(false);
       navigate("/workspaces");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast({
         title: `${error.response.data.message}`,
         status: "error",

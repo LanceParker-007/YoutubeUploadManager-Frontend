@@ -102,23 +102,29 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     <>
       {selectedWorkspace ? (
         <>
-          <Text
+          <Heading
             fontSize={{ base: "28px", md: "30px" }}
-            pb={3}
+            py={3}
             px={2}
             w="100%"
             display={"flex"}
             justifyContent={{ base: "space-between" }}
             alignItems={"center"}
             color={"black"}
+            mb={4}
+            bg={"aliceblue"}
+            borderRadius={6}
           >
             <IconButton
               colorScheme="blue"
-              display={{ base: "flex", md: "none" }}
+              display={{ base: "flex" }}
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedWorkspace("")}
             />
-            {selectedWorkspace.workspaceName.toUpperCase()}
+            <Text textAlign={"center"}>
+              {selectedWorkspace.workspaceName.toUpperCase()}
+            </Text>
+
             {selectedWorkspace.workspaceAdmin._id === user._id ? (
               <>
                 {/* Groupchat hai to uski settings dikha rahe */}
@@ -131,7 +137,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
             ) : (
               <></>
             )}
-          </Text>
+          </Heading>
           {/* Make this (form)conatiner a modal */}
           <UploadVideoOnYUMModal fetchAllVideoDetails={fetchAllVideoDetails} />
           {/* All uploaded videos details */}
@@ -167,7 +173,12 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
             {loadingWorkspaceVideos ? (
               <WorkspacesLoading />
             ) : (
-              <Box padding={2} bg={"blackAlpha.400"} borderRadius={"md"}>
+              <Box
+                padding={2}
+                bg={"blackAlpha.400"}
+                borderRadius={"md"}
+                overflowX={"auto"}
+              >
                 {selectedWorkspace &&
                   displayVideos.map((video) => (
                     // <Text color={"black"}>{video._id}</Text>

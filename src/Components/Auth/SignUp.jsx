@@ -50,7 +50,7 @@ const SignUp = () => {
           setLoading(false);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
           setLoading(false);
         });
     } else {
@@ -90,7 +90,7 @@ const SignUp = () => {
         },
       };
 
-      const { data } = await axios.post(
+      await axios.post(
         `${server}/api/user/register`,
         { name, email, password, pic },
         config
@@ -104,7 +104,7 @@ const SignUp = () => {
         position: "top",
       });
 
-      console.log(data);
+      // console.log(data);
       setLoading(false);
       navigate("/chats");
     } catch (error) {
@@ -125,8 +125,10 @@ const SignUp = () => {
         onSubmit={(e) => submitHandler(e)}
         style={{ width: "100%", padding: "6px" }}
       >
-        <FormControl id="signupName" isRequired>
-          <FormLabel htmlFor="inputSignupName">Name</FormLabel>
+        <FormControl id="signupName" isRequired mb={2}>
+          <FormLabel htmlFor="inputSignupName" mb={0}>
+            Name
+          </FormLabel>
           <Input
             id="inputSignupName"
             type="text"
@@ -137,8 +139,10 @@ const SignUp = () => {
             borderColor={"blackAlpha.600"}
           />
         </FormControl>
-        <FormControl id="signupEmail" isRequired>
-          <FormLabel htmlFor="inputSignupEmail">Email</FormLabel>
+        <FormControl id="signupEmail" isRequired mb={2}>
+          <FormLabel htmlFor="inputSignupEmail" mb={0}>
+            Email
+          </FormLabel>
           <Input
             id="inputSignupEmail"
             type="text"
@@ -149,8 +153,10 @@ const SignUp = () => {
             borderColor={"blackAlpha.600"}
           />
         </FormControl>
-        <FormControl id="signupPassword" isRequired>
-          <FormLabel htmlFor="inputSignupPassword">Password</FormLabel>
+        <FormControl id="signupPassword" isRequired mb={2}>
+          <FormLabel htmlFor="inputSignupPassword" mb={0}>
+            Password
+          </FormLabel>
           <InputGroup>
             <Input
               id="inputSignupPassword"
@@ -174,7 +180,9 @@ const SignUp = () => {
           </InputGroup>
         </FormControl>
         <FormControl id="signupPicture" isRequired>
-          <FormLabel htmlFor="picture">Upload your picture</FormLabel>
+          <FormLabel htmlFor="picture" mb={0}>
+            Upload your picture
+          </FormLabel>
           <Input
             id="picture"
             type="file"

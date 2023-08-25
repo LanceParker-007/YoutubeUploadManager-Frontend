@@ -19,23 +19,18 @@ const HomePage = () => {
         display={"flex"}
         justifyContent={"center"}
         p={3}
-        bg={"white"}
         w={"100%"}
         m={"40px 0 15px 0"}
         borderRadius={"lg"}
         borderWidth={"1px"}
+        bg={"aliceblue"}
       >
-        <Heading
-          fontFamily={"fantasy"}
-          fontSize={"2xl"}
-          color={"black"}
-          letterSpacing={1}
-        >
+        <Heading fontSize={"2xl"} color={"black"} letterSpacing={1}>
           Youtube Upload Manager
         </Heading>
       </Box>
       <Box
-        bg={"white"}
+        bg={"aliceblue"}
         w={"100%"}
         p={4}
         borderRadius={"lg"}
@@ -44,6 +39,7 @@ const HomePage = () => {
         <Tabs variant="unstyled" color={"black"}>
           <TabList mb={"1em"}>
             <Tab
+              bg={"green.100"}
               _selected={{ color: "white", bg: "green.400" }}
               width={"50%"}
               p={2}
@@ -52,6 +48,7 @@ const HomePage = () => {
               Login
             </Tab>
             <Tab
+              bg={"blue.100"}
               _selected={{ color: "white", bg: "blue.500" }}
               width={"50%"}
               p={2}
