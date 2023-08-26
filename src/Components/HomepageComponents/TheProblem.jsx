@@ -17,6 +17,7 @@ const TheProblem = () => {
         borderBottom={"1px solid black"}
         bg={"yellow.200"}
         p={1}
+        fontSize={"2rem"}
       >
         The problem:
       </Heading>
@@ -25,11 +26,11 @@ const TheProblem = () => {
         minheight={"40vh"}
         my={1}
         fontFamily={"mono"}
-        fontSize={{ base: "0.9rem", md: "1.5rem" }}
+        fontSize={{ base: "0.9rem", md: "1.4rem" }}
         textAlign={"justify"}
       >
         <HStack>
-          <ArrowRightIcon boxSize={{ base: "1.4rem", md: "2.5rem" }} />
+          <ArrowRightIcon boxSize={{ base: "1.4rem", md: "2.4rem" }} />
           <Text bg={"aliceblue"} p={1}>
             A Youtuber rercords his video and send the recordings to his team of
             editors.
@@ -37,7 +38,7 @@ const TheProblem = () => {
         </HStack>
         <Divider my={1} />
         <HStack>
-          <ArrowRightIcon boxSize={{ base: "1.4rem", md: "2.5rem" }} />
+          <ArrowRightIcon boxSize={{ base: "1.4rem", md: "2.4rem" }} />
           <Text bg={"aliceblue"} p={1}>
             Once the editors finish their job they send the video back to the
             Youtuber.
@@ -45,7 +46,7 @@ const TheProblem = () => {
         </HStack>
         <Divider my={1} />
         <HStack>
-          <ArrowRightIcon boxSize={{ base: "1.4rem", md: "2.5rem" }} />
+          <ArrowRightIcon boxSize={{ base: "1.4rem", md: "2.4rem" }} />
           <Text bg={"aliceblue"} p={1}>
             Now, to upload this video to Youtube, Youtuber first has to download
             the large video file on his system and then he will upload this to
@@ -54,7 +55,7 @@ const TheProblem = () => {
         </HStack>
         <Divider my={1} />
         <HStack>
-          <ArrowRightIcon boxSize={{ base: "1.4rem", md: "2.5rem" }} />
+          <ArrowRightIcon boxSize={{ base: "1.4rem", md: "2.4rem" }} />
           <Text bg={"aliceblue"} p={1}>
             This downloading and uploading of large video file is the problem
             Youtubers face, which we can solve using YUM(Youtube Upload
