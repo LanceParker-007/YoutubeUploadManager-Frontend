@@ -114,7 +114,7 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
             borderColor={"blackAlpha.600"}
-            autoComplete="true"
+            autoComplete="on"
           />
         </FormControl>
         <FormControl id="loginPassword" isRequired mt={2}>
@@ -130,7 +130,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               borderColor={"blackAlpha.600"}
-              autoComplete="true"
+              autoComplete={"current-password"}
             />
             <InputRightElement width={"4.5rem"} backgroundColor={"green.400"}>
               <Button

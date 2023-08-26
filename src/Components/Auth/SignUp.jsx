@@ -137,6 +137,7 @@ const SignUp = () => {
             onChange={(e) => setName(e.target.value)}
             required
             borderColor={"blackAlpha.600"}
+            autoComplete="on"
           />
         </FormControl>
         <FormControl id="signupEmail" isRequired mb={2}>
@@ -151,6 +152,7 @@ const SignUp = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
             borderColor={"blackAlpha.600"}
+            autoComplete="on"
           />
         </FormControl>
         <FormControl id="signupPassword" isRequired mb={2}>
@@ -166,6 +168,7 @@ const SignUp = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               borderColor={"blackAlpha.600"}
+              autoComplete="current-password"
             />
             <InputRightElement width={"4.5rem"} backgroundColor={"green.400"}>
               <Button
