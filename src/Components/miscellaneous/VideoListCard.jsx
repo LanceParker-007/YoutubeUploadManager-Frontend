@@ -28,9 +28,9 @@ const VideoListCard = ({
   const [videoTitle, setVideoTitle] = useState(video.title);
 
   useEffect(() => {
-    let isLargeScreen = window.innerWidth >= 768;
-    if (isLargeScreen) {
-      setVideoTitle(videoTitle.substring(0, 10) + "...");
+    let isLargeScreen = window.innerWidth >= 500;
+    if (!isLargeScreen) {
+      setVideoTitle(videoTitle.substring(0, 6) + "...");
     }
   }, [videoTitle]);
 
@@ -83,8 +83,9 @@ const VideoListCard = ({
                 isLoading={uploadToYtBtnloading}
                 colorScheme={"yellow"}
                 onClick={handleLogin}
+                rightIcon={<FaYoutube size={"2rem"} color="red" />}
               >
-                Login to Yt Account
+                Login to
               </Button>
             )
           )}
@@ -95,8 +96,9 @@ const VideoListCard = ({
                 isLoading={uploadToYtBtnloading}
                 colorScheme={"whatsapp"}
                 cursor={"not-allowed"}
+                rightIcon={<FaYoutube size={"2rem"} />}
               >
-                Uploaded to Youtube
+                Uploaded to
               </Button>
             ) : (
               <Button
