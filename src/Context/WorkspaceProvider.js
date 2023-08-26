@@ -4,7 +4,7 @@ import queryString from "query-string";
 
 // Login to Youtube Account------------------------
 const clientId = process.env.REACT_APP_CLIENT_ID;
-const redirectUri = process.env.REACT_APP_DEV_REDIRECT_URI;
+const redirectUri = process.env.REACT_APP_PROD_REDIRECT_URI;
 const scopes = [
   "https://www.googleapis.com/auth/youtube.upload",
   "https://www.googleapis.com/auth/userinfo.profile",
