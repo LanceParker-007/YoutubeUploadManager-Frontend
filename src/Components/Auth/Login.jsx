@@ -155,7 +155,9 @@ const Login = () => {
           Login
         </Button>
       </form>
-      <Text fontFamily={"fantasy"}>OR</Text>
+      <Text fontFamily={"fantasy"} my={4}>
+        OR
+      </Text>
       {/* ------Google Sign in Button----------- */}
       <GoogleLogin
         onSuccess={async (credentialResponse) => {

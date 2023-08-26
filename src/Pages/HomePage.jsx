@@ -1,12 +1,13 @@
 import {
   Box,
   Container,
-  Tab,
-  TabList,
+  // Tab,
+  // TabList,
   TabPanel,
   TabPanels,
   Tabs,
   Heading,
+  Text,
 } from "@chakra-ui/react";
 import React from "react";
 import Login from "../Components/Auth/Login";
@@ -37,7 +38,7 @@ const HomePage = () => {
         borderWidth={"1px"}
       >
         <Tabs variant="unstyled" color={"black"}>
-          <TabList mb={"1em"}>
+          {/* <TabList mb={"1em"}>
             <Tab
               bg={"green.100"}
               _selected={{ color: "white", bg: "green.400" }}
@@ -56,7 +57,15 @@ const HomePage = () => {
             >
               SignUp
             </Tab>
-          </TabList>
+          </TabList> */}
+          <Text
+            textAlign={"center"}
+            fontFamily={"monospace"}
+            fontWeight={"bold"}
+            fontSize={"2xl"}
+          >
+            Already have an account
+          </Text>
           <TabPanels>
             <TabPanel>
               <Login />
