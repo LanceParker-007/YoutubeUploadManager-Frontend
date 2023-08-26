@@ -168,6 +168,7 @@ const Login = () => {
           const email = credentialResponseDecoded.email;
           const pic = credentialResponseDecoded.picture;
           try {
+            setLoading(true);
             const config = {
               headers: {
                 "Content-Type": "application/json",
