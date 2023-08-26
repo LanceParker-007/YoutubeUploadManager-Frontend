@@ -13,13 +13,18 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { FaYoutube } from "react-icons/fa";
 
-const VideoListCard = ({ video, uploadToYoutube }) => {
+const VideoListCard = ({
+  video,
+  uploadToYoutube,
+  accessToken,
+  uploadToYtBtnloading,
+}) => {
   const { user, selectedWorkspace, handleLogin } = useWorkspaceContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const accessToken = Cookies.get("accessToken");
+  // const accessToken = Cookies.get("accessToken");
   const [videoTitle, setVideoTitle] = useState(video.title);
 
   useEffect(() => {
@@ -51,9 +56,11 @@ const VideoListCard = ({ video, uploadToYoutube }) => {
         </div>
 
         <div style={{ textAlign: "right", width: "50%" }}>
+          {/* For admin */}
           {selectedWorkspace.workspaceAdmin._id === user._id && accessToken ? (
             video.status ? (
               <Button
+                isLoading={uploadToYtBtnloading}
                 colorScheme={"whatsapp"}
                 cursor={"not-allowed"}
                 rightIcon={<FaYoutube size={"2rem"} />}
@@ -62,6 +69,7 @@ const VideoListCard = ({ video, uploadToYoutube }) => {
               </Button>
             ) : (
               <Button
+                isLoading={uploadToYtBtnloading}
                 colorScheme={"yellow"}
                 onClick={() => uploadToYoutube(video._id)}
                 rightIcon={<FaYoutube size={"2rem"} color="red" />}
@@ -71,18 +79,31 @@ const VideoListCard = ({ video, uploadToYoutube }) => {
             )
           ) : (
             selectedWorkspace.workspaceAdmin._id === user._id && (
-              <Button colorScheme={"yellow"} onClick={handleLogin}>
+              <Button
+                isLoading={uploadToYtBtnloading}
+                colorScheme={"yellow"}
+                onClick={handleLogin}
+              >
                 Login to Yt Account
               </Button>
             )
           )}
+          {/* For team members */}
           {selectedWorkspace.workspaceAdmin._id !== user._id &&
             (video.status ? (
-              <Button colorScheme={"whatsapp"} cursor={"not-allowed"}>
+              <Button
+                isLoading={uploadToYtBtnloading}
+                colorScheme={"whatsapp"}
+                cursor={"not-allowed"}
+              >
                 Uploaded to Youtube
               </Button>
             ) : (
-              <Button colorScheme={"red"} cursor={"not-allowed"}>
+              <Button
+                isLoading={uploadToYtBtnloading}
+                colorScheme={"red"}
+                cursor={"not-allowed"}
+              >
                 Action Needed
               </Button>
             ))}

@@ -14,29 +14,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 import server from "../../index";
-import { FaGoogle } from "react-icons/fa";
-import queryString from "query-string";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
-
-//Sign in with Google
-const clientId = process.env.REACT_APP_CLIENT_ID;
-const redirectUri = process.env.REACT_APP_PROD_SIGNIN_REDIRECT_URI;
-const scopes = [
-  "https://www.googleapis.com/auth/userinfo.profile",
-  "https://www.googleapis.com/auth/userinfo.email",
-];
-
-const authorizationUrl = `https://accounts.google.com/o/oauth2/auth?${queryString.stringify(
-  {
-    client_id: clientId,
-    redirect_uri: redirectUri,
-    scope: scopes.join(" "),
-    response_type: "code",
-  }
-)}`;
-
-//--------------------------------
+import { GoogleLogin } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -100,12 +81,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-
-  // Sign In with Google
-  const loginWithGoogle = () => {
-    window.location.href = authorizationUrl;
-  };
-  //------------------------------------------
 
   useEffect(() => {
     setLoading(true);
@@ -181,7 +156,58 @@ const Login = () => {
         </Button>
       </form>
       <Text fontFamily={"fantasy"}>OR</Text>
-      <Button
+      {/* ------Google Sign in Button----------- */}
+      <GoogleLogin
+        onSuccess={async (credentialResponse) => {
+          const credentialResponseDecoded = jwt_decode(
+            credentialResponse.credential
+          );
+          const name = credentialResponseDecoded.name;
+          const email = credentialResponseDecoded.email;
+          const pic = credentialResponseDecoded.picture;
+          try {
+            const config = {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            };
+
+            const { data } = await axios.post(
+              `${server}/api/user/signinwithgoogle`,
+              { name, email, pic },
+              config
+            );
+
+            toast({
+              title: "Login successful 👍",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+            });
+            //Saving user in local storage
+            setUser(data);
+            localStorage.setItem("userInfo", JSON.stringify(data));
+            setLoading(false);
+            navigate("/workspaces");
+          } catch (error) {
+            // console.log(error);
+            toast({
+              title: `${error.response.data.message}`,
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+            });
+            setLoading(false);
+          }
+        }}
+        onError={() => {
+          console.log("Login Failed");
+        }}
+      />
+      ;{/* -------------------------------------- */}
+      {/* <Button
         leftIcon={<FaGoogle />}
         colorScheme="red"
         width={"97%"}
@@ -189,7 +215,7 @@ const Login = () => {
       >
         {" "}
         Sign in with Google
-      </Button>
+      </Button> */}
     </VStack>
   );
 };

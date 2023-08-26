@@ -18,15 +18,15 @@ import UploadVideoOnYUMModal from "./miscellaneous/UploadVideoOnYUMModal";
 import LoginWithGoogle from "./miscellaneous/LoginWithGoogle";
 import WorkspacesLoading from "../Components/WorkspacesLoading";
 import server from "../index.js";
-import Cookies from "js-cookie";
 
 const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedWorkspace, setSelectedWorkspace } =
     useWorkspaceContext();
-  // const [loading, setLoading] = useState(false);
+  const [uploadToYtBtnloading, setUploadToYtBtnloading] = useState(false);
   const [loadingWorkspaceVideos, setLoadingWorkspaceVideos] = useState(false);
   const toast = useToast();
   const [displayVideos, setDisplayVideos] = useState([]);
+  const [accessToken, setAccessToken] = useState(null);
 
   const fetchAllVideoDetails = async () => {
     if (!selectedWorkspace) return;
@@ -47,7 +47,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     } catch (error) {
       toast({
         title: `Failed to fecth workspace videos`,
-        status: error.message,
+        status: error,
         duration: 4000,
         isClosable: true,
         position: "top",
@@ -59,10 +59,14 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const uploadToYoutube = async (videoId) => {
     const selectedWorkspaceId = selectedWorkspace._id;
     try {
-      // setLoading(true);
+      setUploadToYtBtnloading(true);
       const { data } = await axios.post(
         `${server}/api/workspace/uploadvideotoyoutube`,
-        { selectedWorkspaceId: selectedWorkspaceId, videoId: videoId },
+        {
+          selectedWorkspaceId: selectedWorkspaceId,
+          videoId: videoId,
+          accessToken: accessToken,
+        },
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -72,6 +76,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
       );
 
       fetchAllVideoDetails();
+      setUploadToYtBtnloading(false);
       toast({
         title: `${data.message}`,
         status: "success",
@@ -80,6 +85,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
         position: "top",
       });
     } catch (error) {
+      setUploadToYtBtnloading(false);
       toast({
         title: "Video upload to Yt failed",
         description: error.message,
@@ -91,12 +97,27 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  const fetchYtAccessToken = async () => {
+    try {
+      const { data } = await axios.get(`${server}/getytaccesstoken`);
+      setAccessToken(data.ytAccessToken);
+    } catch (error) {
+      toast({
+        title: `Failed to fecth ytAccessToken:`,
+        status: error,
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   useEffect(() => {
     fetchAllVideoDetails();
+    fetchYtAccessToken();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWorkspace]);
-
-  const accessToken = Cookies.get("accessToken");
 
   return (
     <>
@@ -186,6 +207,8 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
                       key={video._id}
                       video={video}
                       uploadToYoutube={uploadToYoutube}
+                      accessToken={accessToken}
+                      uploadToYtBtnloading={uploadToYtBtnloading}
                     />
                   ))}
               </Box>
