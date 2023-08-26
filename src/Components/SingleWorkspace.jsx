@@ -175,9 +175,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
               >
                 <LoginWithGoogle />
 
-                <Text color={"red"}>
-                  Admin needs to login in with the Yt channel google channel
-                </Text>
+                <Text color={"red"}>Admin's Yt Login needed</Text>
               </HStack>
             )}
 
