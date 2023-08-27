@@ -15,6 +15,7 @@ import {
   FormControl,
   Input,
   Spinner,
+  HStack,
 } from "@chakra-ui/react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 import { useState } from "react";
@@ -26,6 +27,7 @@ import server from "../../index.js";
 const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [workspaceName, setWorkspaceName] = useState("");
+  const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [renameloading, setRenameloading] = useState(false);
@@ -194,11 +196,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
   };
 
   //Search user to add
-  const handleSearch = async (query) => {
-    if (!query || query.length === 0) {
-      setSearchResult([]);
-      return;
-    }
+  const handleSearch = async () => {
     try {
       setLoading(true);
 
@@ -209,7 +207,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
       };
 
       const { data } = await axios.get(
-        `${server}api/user/searchusers?search=${query}`,
+        `${server}/api/user/searchusers?search=${search}`,
         config
       );
 
@@ -276,11 +274,27 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
               </Button>
             </FormControl>
             <FormControl>
-              <Input
-                placeholder="Add new user"
-                mb={1}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
+              <HStack
+                w={"full"}
+                p={0}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                mb={2}
+              >
+                <Input
+                  placeholder="Search and add team members here"
+                  mb={0}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    if (e.target.value.length === 0) {
+                      setSearchResult([]);
+                    }
+                  }}
+                />
+                <Button colorScheme="yellow" onClick={handleSearch}>
+                  Search
+                </Button>
+              </HStack>
             </FormControl>
             {/* Searching Users */}
             {loading ? (
