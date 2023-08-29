@@ -18,6 +18,7 @@ import UploadVideoOnYUMModal from "./miscellaneous/UploadVideoOnYUMModal";
 import LoginWithGoogle from "./miscellaneous/LoginWithGoogle";
 import WorkspacesLoading from "../Components/WorkspacesLoading";
 import server from "../index.js";
+import ConnectToServer from "./ConnectToServerComponents/ConnectToServer";
 
 const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const { user, selectedWorkspace, setSelectedWorkspace } =
@@ -27,6 +28,10 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const toast = useToast();
   const [displayVideos, setDisplayVideos] = useState([]);
   const [accessToken, setAccessToken] = useState(null);
+
+  // -----
+  const [userServer, setUserServer] = useState("");
+  // -----
 
   const fetchAllVideoDetails = async () => {
     if (!selectedWorkspace) return;
@@ -57,6 +62,17 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   };
 
   const uploadToYoutube = async (videoId) => {
+    if (!userServer || userServer.length === 0) {
+      toast({
+        title: "Connect to a server first!",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+
     const selectedWorkspaceId = selectedWorkspace._id;
     try {
       setUploadToYtBtnloading(true);
@@ -115,9 +131,12 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     fetchAllVideoDetails();
     fetchYtAccessToken();
+    if (sessionStorage.getItem("userServer")) {
+      setUserServer(sessionStorage.getItem("userServer"));
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedWorkspace]);
+  }, [selectedWorkspace, userServer]);
 
   return (
     <>
@@ -171,11 +190,17 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
                 border={"1px solid black"}
                 height={"6rem"}
                 p={2}
-                justifyContent={"space-between"}
+                justifyContent={"center"}
               >
-                <LoginWithGoogle />
-
-                <Text color={"red"}>Admin's Yt Login needed</Text>
+                {userServer && (
+                  <LoginWithGoogle setUserServer={setUserServer} />
+                )}
+                {!userServer && (
+                  <ConnectToServer
+                    userServer={userServer}
+                    setUserServer={setUserServer}
+                  />
+                )}
               </HStack>
             )}
 
@@ -207,6 +232,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
                       uploadToYoutube={uploadToYoutube}
                       accessToken={accessToken}
                       uploadToYtBtnloading={uploadToYtBtnloading}
+                      userServer={userServer}
                     />
                   ))}
               </Box>

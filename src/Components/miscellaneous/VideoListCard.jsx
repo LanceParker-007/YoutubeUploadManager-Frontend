@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
@@ -26,6 +27,8 @@ const VideoListCard = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   // const accessToken = Cookies.get("accessToken");
   const [videoTitle, setVideoTitle] = useState(video.title);
+  const toast = useToast();
+  const userServerFromSession = sessionStorage.getItem("userServer");
 
   useEffect(() => {
     let isLargeScreen = window.innerWidth >= 500;
@@ -33,6 +36,21 @@ const VideoListCard = ({
       setVideoTitle(videoTitle.substring(0, 6) + "...");
     }
   }, [videoTitle]);
+
+  const LoginToYoutube = () => {
+    console.log(userServerFromSession);
+    if (!userServerFromSession || userServerFromSession.length === 0) {
+      toast({
+        title: "Connect to a server first!",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+    handleLogin();
+  };
 
   return (
     <>
@@ -82,7 +100,7 @@ const VideoListCard = ({
               <Button
                 isLoading={uploadToYtBtnloading}
                 colorScheme={"yellow"}
-                onClick={handleLogin}
+                onClick={LoginToYoutube}
                 rightIcon={<FaYoutube size={"2rem"} color="red" />}
               >
                 Login to

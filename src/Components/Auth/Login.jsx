@@ -115,6 +115,7 @@ const Login = () => {
             required
             borderColor={"blackAlpha.600"}
             autoComplete="on"
+            bg={"white"}
           />
         </FormControl>
         <FormControl id="loginPassword" isRequired mt={2}>
@@ -131,6 +132,7 @@ const Login = () => {
               required
               borderColor={"blackAlpha.600"}
               autoComplete={"current-password"}
+              bg={"white"}
             />
             <InputRightElement width={"4.5rem"} backgroundColor={"green.400"}>
               <Button

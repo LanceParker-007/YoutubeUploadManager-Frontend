@@ -30,6 +30,7 @@ const WorkspaceContextProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [workspaces, setWorkspaces] = useState([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState();
+
   const handleLogin = () => {
     window.location.href = authorizationUrl;
   };
