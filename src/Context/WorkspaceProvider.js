@@ -2,25 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import queryString from "query-string";
 
-// Login to Youtube Account------------------------
-const clientId = process.env.REACT_APP_CLIENT_ID;
-const redirectUri = process.env.REACT_APP_PROD_REDIRECT_URI;
-const scopes = [
-  "https://www.googleapis.com/auth/youtube.upload",
-  "https://www.googleapis.com/auth/userinfo.profile",
-  "https://www.googleapis.com/auth/userinfo.email",
-];
-
-const authorizationUrl = `https://accounts.google.com/o/oauth2/auth?${queryString.stringify(
-  {
-    client_id: clientId,
-    redirect_uri: redirectUri,
-    scope: scopes.join(" "),
-    response_type: "code",
-  }
-)}`;
-//-----------------------------------------------
-
 const WorkspaceContext = createContext();
 
 // eslint-disable-next-line react/prop-types
@@ -31,7 +12,28 @@ const WorkspaceContextProvider = ({ children }) => {
   const [workspaces, setWorkspaces] = useState([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState();
 
-  const handleLogin = () => {
+  const handleLogin = (userServer) => {
+    //Login to Youtube account vala section idhar copy karna padega
+    // redirectUri = https://test-yum-backend.vercel.app/google/callback
+
+    const clientId = process.env.REACT_APP_CLIENT_ID;
+    const redirectUri = `${userServer}/google/callback`; //CLIENT_REDIRECT_URI_SERVER
+    const scopes = [
+      "https://www.googleapis.com/auth/youtube.upload",
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ];
+
+    const authorizationUrl = `https://accounts.google.com/o/oauth2/auth?${queryString.stringify(
+      {
+        client_id: clientId,
+        redirect_uri: redirectUri,
+        scope: scopes.join(" "),
+        response_type: "code",
+      }
+    )}`;
+
+    //--------------------------------------------------------
     window.location.href = authorizationUrl;
   };
 

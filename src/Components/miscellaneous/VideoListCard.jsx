@@ -25,7 +25,6 @@ const VideoListCard = ({
 }) => {
   const { user, selectedWorkspace, handleLogin } = useWorkspaceContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const accessToken = Cookies.get("accessToken");
   const [videoTitle, setVideoTitle] = useState(video.title);
   const toast = useToast();
   const userServerFromSession = sessionStorage.getItem("userServer");
@@ -38,7 +37,6 @@ const VideoListCard = ({
   }, [videoTitle]);
 
   const LoginToYoutube = () => {
-    console.log(userServerFromSession);
     if (!userServerFromSession || userServerFromSession.length === 0) {
       toast({
         title: "Connect to a server first!",
@@ -49,18 +47,20 @@ const VideoListCard = ({
       });
       return;
     }
-    handleLogin();
+    handleLogin(userServerFromSession);
   };
 
   return (
     <>
       <HStack
-        bg={"blackAlpha.900"}
-        color={"whitesmoke"}
+        // bg={"blackAlpha.900"}
+        border={"1px"}
+        borderColor={"blackAlpha.200"}
+        color={"black"}
         justifyContent={"space-between"}
         p={2}
-        borderRadius={"0.6rem"}
-        mb={2}
+        // borderRadius={"0.6rem"}
+        // mb={2}
         width={"full"}
         // overflowX={"auto"}
       >
@@ -69,13 +69,15 @@ const VideoListCard = ({
         </div>
         <div style={{ textAlign: "left", width: "18%" }}>
           <Text onClick={onOpen} cursor={"pointer"} color={"red"}>
-            Watch Video
+            Watch
           </Text>
         </div>
 
         <div style={{ textAlign: "right", width: "50%" }}>
           {/* For admin */}
-          {selectedWorkspace.workspaceAdmin._id === user._id && accessToken ? (
+          {selectedWorkspace.workspaceAdmin._id === user._id &&
+          accessToken &&
+          accessToken.length !== 0 ? (
             video.status ? (
               <Button
                 isLoading={uploadToYtBtnloading}

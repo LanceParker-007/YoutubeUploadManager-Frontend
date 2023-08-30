@@ -33,6 +33,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   const [userServer, setUserServer] = useState("");
   // -----
 
+  //Our server
   const fetchAllVideoDetails = async () => {
     if (!selectedWorkspace) return;
 
@@ -61,6 +62,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  //Upload Video to YouTube function will also act on userServer
   const uploadToYoutube = async (videoId) => {
     if (!userServer || userServer.length === 0) {
       toast({
@@ -75,9 +77,10 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
 
     const selectedWorkspaceId = selectedWorkspace._id;
     try {
+      // console.log(userServer);
       setUploadToYtBtnloading(true);
       const { data } = await axios.post(
-        `${server}/api/workspace/uploadvideotoyoutube`,
+        `${userServer}/api/workspace/uploadvideotoyoutube`, //clientserver_url
         {
           selectedWorkspaceId: selectedWorkspaceId,
           videoId: videoId,
@@ -113,10 +116,16 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  // Fetch Token from userServer
   const fetchYtAccessToken = async () => {
+    if (!userServer || userServer.length === 0) {
+      return;
+    }
     try {
-      const { data } = await axios.get(`${server}/getytaccesstoken`);
+      // console.log(userServer);
+      const { data } = await axios.get(`${userServer}/getytaccesstoken`);
       setAccessToken(data.ytAccessToken);
+      // console.log(accessToken);
     } catch (error) {
       toast({
         title: `Failed to fecth ytAccessToken:`,
@@ -134,7 +143,8 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     if (sessionStorage.getItem("userServer")) {
       setUserServer(sessionStorage.getItem("userServer"));
     }
-
+    // console.log(server);
+    // console.log(userServer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWorkspace, userServer]);
 
@@ -181,13 +191,14 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
           {/* Make this (form)conatiner a modal */}
           <UploadVideoOnYUMModal fetchAllVideoDetails={fetchAllVideoDetails} />
           {/* All uploaded videos details */}
-          <Divider height={"0.1rem"} bg={"red"} margin={4} />
+          <Divider height={"0.2rem"} bg={"blackalpha.200"} margin={4} />
           {/* Youtube Authorizrtion: Admin needs to sign in to youtube */}
-          {!accessToken &&
+          {(!accessToken || (accessToken && accessToken.length !== 0)) &&
             selectedWorkspace.workspaceAdmin._id === user._id && (
               <HStack
                 width={"full"}
-                border={"1px solid black"}
+                border={"1px"}
+                borderColor={"blackAlpha.200"}
                 height={"6rem"}
                 p={2}
                 justifyContent={"center"}
@@ -205,22 +216,25 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
             )}
 
           {/* All Videos Details */}
-          <Box width={"full"} overflowY={"auto"}>
-            <Heading
-              color={"black"}
-              fontFamily={"body"}
-              textAlign={"center"}
-              mb={4}
-            >
+          <HStack
+            justifyContent={"center"}
+            alignItems={"center"}
+            // bg={"red"}
+            width={"full"}
+            py={2}
+          >
+            <Heading color={"black"} fontFamily={"body"} textAlign={"center"}>
               All Videos Details
             </Heading>
+          </HStack>
+
+          <Box width={"full"} overflowY={"auto"}>
             {loadingWorkspaceVideos ? (
               <WorkspacesLoading />
             ) : (
               <Box
-                padding={2}
-                bg={"blackAlpha.400"}
-                borderRadius={"md"}
+                // padding={2}
+                bg={"blackAlpha.100"}
                 overflowX={"auto"}
               >
                 {selectedWorkspace &&
