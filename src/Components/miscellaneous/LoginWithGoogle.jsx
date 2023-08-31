@@ -19,7 +19,8 @@ const LoginWithGoogle = ({ setUserServer }) => {
       });
       return;
     }
-    handleLogin(userServerFromSession);
+    // console.log(userServerFromSession);
+    handleLogin(userServerFromSession.toString());
   };
 
   return (
@@ -29,7 +30,7 @@ const LoginWithGoogle = ({ setUserServer }) => {
       justifyContent={"space-evenly"}
       alignItems={"center"}
     >
-      {!userServerFromSession && (
+      {/* {userServerFromSession && (
         <Tooltip label={`Admin needs to sign in`} hasArrow placement="top">
           <Button
             fontSize={"xl"}
@@ -40,8 +41,8 @@ const LoginWithGoogle = ({ setUserServer }) => {
           >
             Login to
           </Button>
-        </Tooltip>
-      )}
+        
+      )} */}
       <Tooltip label={`Disconnect from server`} hasArrow placement="top">
         <Button
           colorScheme="red"

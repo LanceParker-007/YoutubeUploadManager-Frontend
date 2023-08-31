@@ -25,5 +25,4 @@ root.render(
 
 // const server = "http://localhost:5000";
 const server = "https://yum-backend.vercel.app";
-// const server = "https://test-yum-backend.vercel.app";
 export default server;

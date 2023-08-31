@@ -18,6 +18,7 @@ const WorkspaceContextProvider = ({ children }) => {
 
     const clientId = process.env.REACT_APP_CLIENT_ID;
     const redirectUri = `${userServer}/google/callback`; //CLIENT_REDIRECT_URI_SERVER
+    // console.log(redirectUri);
     const scopes = [
       "https://www.googleapis.com/auth/youtube.upload",
       "https://www.googleapis.com/auth/userinfo.profile",

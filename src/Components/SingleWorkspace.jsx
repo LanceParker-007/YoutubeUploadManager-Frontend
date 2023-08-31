@@ -80,7 +80,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
       // console.log(userServer);
       setUploadToYtBtnloading(true);
       const { data } = await axios.post(
-        `${userServer}/api/workspace/uploadvideotoyoutube`, //clientserver_url
+        `${userServer}/api/youtubecontrol/uploadvideotoyoutube`, //clientserver_url
         {
           selectedWorkspaceId: selectedWorkspaceId,
           videoId: videoId,
@@ -138,13 +138,14 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
-    fetchAllVideoDetails();
-    fetchYtAccessToken();
     if (sessionStorage.getItem("userServer")) {
       setUserServer(sessionStorage.getItem("userServer"));
     }
-    // console.log(server);
-    // console.log(userServer);
+
+    fetchAllVideoDetails();
+    fetchYtAccessToken();
+
+    // console.log(server)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWorkspace, userServer]);
 

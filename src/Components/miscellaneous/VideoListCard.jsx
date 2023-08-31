@@ -84,6 +84,7 @@ const VideoListCard = ({
                 colorScheme={"whatsapp"}
                 cursor={"not-allowed"}
                 rightIcon={<FaYoutube size={"2rem"} />}
+                width={"10rem"}
               >
                 Uploaded to
               </Button>
@@ -93,6 +94,7 @@ const VideoListCard = ({
                 colorScheme={"yellow"}
                 onClick={() => uploadToYoutube(video._id)}
                 rightIcon={<FaYoutube size={"2rem"} color="red" />}
+                width={"10rem"}
               >
                 Upload to
               </Button>
@@ -117,6 +119,7 @@ const VideoListCard = ({
                 colorScheme={"whatsapp"}
                 cursor={"not-allowed"}
                 rightIcon={<FaYoutube size={"2rem"} />}
+                width={"10rem"}
               >
                 Uploaded to
               </Button>
@@ -125,6 +128,7 @@ const VideoListCard = ({
                 isLoading={uploadToYtBtnloading}
                 colorScheme={"red"}
                 cursor={"not-allowed"}
+                width={"10rem"}
               >
                 Action Needed
               </Button>
