@@ -1,30 +1,32 @@
-import { useWorkspaceContext } from "../Context/WorkspaceProvider";
-import { Box } from "@chakra-ui/react";
 import SideDrawer from "../Components/miscellaneous/SideDrawer";
-import MyWorkspaces from "../Components/MyWorkspaces";
-import WorkspaceBox from "../Components/WorkspaceBox";
-import { useState } from "react";
+import { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import WorkspaceLayout from "../Components/WorkspacepageComponents/WorkspaceLayout";
+import VideoInfo from "../Components/WorkspacepageComponents/VideoInfo";
+import { useWorkspaceContext } from "../Context/WorkspaceProvider";
 
 const ChatPage = () => {
-  const { user } = useWorkspaceContext();
-  const [fetchAgain, setFetchAgain] = useState(false);
+  const { user, setUser } = useWorkspaceContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    // If user not logged in push it to "/"
+    if (!userInfo) {
+      return navigate("/");
+    } else {
+      setUser(userInfo);
+    }
+  }, [navigate, setUser]);
 
   return (
     <div style={{ width: "100%" }}>
       {/* Pehle user load hone do phir vo component */}
       {user && <SideDrawer />}
-      <Box
-        display={"flex"}
-        justifyContent={"space-between"}
-        width={"100%"}
-        minHeight={"91.5vh"}
-        p={"10px"}
-      >
-        {user && <MyWorkspaces fetchAgain={fetchAgain} />}
-        {user && (
-          <WorkspaceBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
-        )}
-      </Box>
+      <Routes>
+        <Route path="/" element={<WorkspaceLayout />} />
+        <Route path="/:workspaceId/:videoId" element={<VideoInfo />} />
+      </Routes>
     </div>
   );
 };

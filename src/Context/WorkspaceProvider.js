@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import queryString from "query-string";
+import { useNavigate } from "react-router-dom";
 
 const WorkspaceContext = createContext();
 
@@ -23,6 +23,7 @@ const WorkspaceContextProvider = ({ children }) => {
       "https://www.googleapis.com/auth/youtube.upload",
       "https://www.googleapis.com/auth/userinfo.profile",
       "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/youtube.force-ssl",
     ];
 
     const authorizationUrl = `https://accounts.google.com/o/oauth2/auth?${queryString.stringify(
@@ -45,7 +46,7 @@ const WorkspaceContextProvider = ({ children }) => {
       return navigate("/");
     } else {
       setUser(userInfo);
-      return navigate("/workspaces");
+      // return navigate("/workspace");
     }
   }, [navigate]);
 

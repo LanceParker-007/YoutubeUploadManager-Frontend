@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 import server from "../../index";
 import { useEffect } from "react";
-import Cookies from "js-cookie";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 
@@ -68,7 +67,7 @@ const Login = () => {
       setUser(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      navigate("/workspaces");
+      navigate("/workspace");
     } catch (error) {
       // console.log(error);
       toast({
@@ -83,17 +82,14 @@ const Login = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    let userLoginDetail = Cookies.get("userLoginDetail");
-    if (userLoginDetail) {
-      userLoginDetail = userLoginDetail.substring(2);
-      userLoginDetail = JSON.parse(userLoginDetail);
-      setLoading(false);
-      setUser(userLoginDetail);
-      localStorage.setItem("userInfo", JSON.stringify(userLoginDetail));
-      navigate("/workspaces");
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    // If user not logged in push it to "/"
+    if (!userInfo) {
+      return navigate("/");
+    } else {
+      setUser(userInfo);
+      return navigate("/workspace");
     }
-    setLoading(false);
   }, [navigate, setUser]);
 
   return (
@@ -194,7 +190,7 @@ const Login = () => {
             setUser(data);
             localStorage.setItem("userInfo", JSON.stringify(data));
             setLoading(false);
-            navigate("/workspaces");
+            navigate("/workspace");
           } catch (error) {
             // console.log(error);
             toast({

@@ -1,21 +1,23 @@
 import {
   Button,
   HStack,
-  Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
+  // Heading,
+  // Modal,
+  // ModalBody,
+  // ModalCloseButton,
+  // ModalContent,
+  // ModalHeader,
+  // ModalOverlay,
   Text,
-  useDisclosure,
+  // useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 // import Cookies from "js-cookie";
 import { FaYoutube } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { EditIcon } from "@chakra-ui/icons";
 
 const VideoListCard = ({
   video,
@@ -24,7 +26,7 @@ const VideoListCard = ({
   uploadToYtBtnloading,
 }) => {
   const { user, selectedWorkspace, handleLogin } = useWorkspaceContext();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const [videoTitle, setVideoTitle] = useState(video.title);
   const toast = useToast();
   const userServerFromSession = sessionStorage.getItem("userServer");
@@ -68,9 +70,12 @@ const VideoListCard = ({
           <Text>{videoTitle}</Text>
         </div>
         <div style={{ textAlign: "left", width: "18%" }}>
-          <Text onClick={onOpen} cursor={"pointer"} color={"red"}>
+          {/* <Text onClick={onOpen} cursor={"pointer"} color={"red"}>
             Watch
-          </Text>
+          </Text> */}
+          <Link to={`${selectedWorkspace._id}/${video._id}`}>
+            <EditIcon />
+          </Link>
         </div>
 
         <div style={{ textAlign: "right", width: "50%" }}>
@@ -136,7 +141,7 @@ const VideoListCard = ({
         </div>
       </HStack>
       {/* Modal to watch video  */}
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      {/* <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
@@ -157,7 +162,7 @@ const VideoListCard = ({
             </video>
           </ModalBody>
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </>
   );
 };
