@@ -78,30 +78,32 @@ const VideoInfo = () => {
   const [userServer, setUserServer] = useState("");
   const [accessToken, setAccessToken] = useState();
 
+  const fetchYtAccessToken = async () => {
+    if (!userServer || userServer.length === 0) {
+      return;
+    }
+    try {
+      // console.log(userServer);
+      const { data } = await axios.get(`${userServer}/getytaccesstoken`);
+      setAccessToken(data.ytAccessToken);
+    } catch (error) {
+      toast({
+        title: `Failed to fecth ytAccessToken:`,
+        status: error,
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     if (sessionStorage.getItem("userServer")) {
       setUserServer(sessionStorage.getItem("userServer"));
     }
     // Fetch Token from userServer
-    const fetchYtAccessToken = async () => {
-      if (!userServer || userServer.length === 0) {
-        return;
-      }
-      try {
-        // console.log(userServer);
-        const { data } = await axios.get(`${userServer}/getytaccesstoken`);
-        setAccessToken(data.ytAccessToken);
-      } catch (error) {
-        toast({
-          title: `Failed to fecth ytAccessToken:`,
-          status: error,
-          duration: 4000,
-          isClosable: true,
-          position: "top",
-        });
-      }
-    };
+
     fetchYtAccessToken();
     const fetchVideoDetails = async () => {
       try {
@@ -138,6 +140,7 @@ const VideoInfo = () => {
       }
     };
     fetchVideoDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     setAccessToken,
     navigate,

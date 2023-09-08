@@ -8,7 +8,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import server from "../../index";
 
@@ -17,6 +17,7 @@ const ConnectToServer = ({ userServer, setUserServer }) => {
     "https://yum-backend.vercel.app"
   ); //singleworkspace se leke aate isko
   const [loading, setLoading] = useState(false);
+  const [fetchAgain, setFetchAgain] = useState(false);
   const toast = useToast();
 
   const authenticateUserServer = async () => {
@@ -52,6 +53,7 @@ const ConnectToServer = ({ userServer, setUserServer }) => {
       setUserServer(inputServer);
       sessionStorage.setItem("userServer", inputServer);
       setLoading(false);
+      setFetchAgain(!fetchAgain);
     } catch (error) {
       toast({
         title: error.response.data.message,
@@ -62,6 +64,7 @@ const ConnectToServer = ({ userServer, setUserServer }) => {
       setLoading(false);
     }
   };
+  useEffect(() => {}, [fetchAgain]);
 
   return (
     <VStack>

@@ -15,12 +15,16 @@ const VideoListCard = ({
   const { user, selectedWorkspace, handleLogin } = useWorkspaceContext();
   const [videoTitle, setVideoTitle] = useState(video.title);
   const toast = useToast();
-  const userServerFromSession = sessionStorage.getItem("userServer");
+  const [userServerFromSession, setUserServerFromSession] = useState("");
 
   useEffect(() => {
     let isLargeScreen = window.innerWidth >= 500;
     if (!isLargeScreen) {
       setVideoTitle(videoTitle.substring(0, 6) + "...");
+    }
+
+    if (sessionStorage.getItem("userServer")) {
+      setUserServerFromSession(sessionStorage.getItem("userServer"));
     }
   }, [videoTitle]);
 

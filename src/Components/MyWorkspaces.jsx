@@ -103,13 +103,7 @@ const MyWorkspaces = ({ fetchAgain }) => {
             {workspaces &&
               workspaces.map((workspace) => (
                 <Box
-                  onClick={() => {
-                    setSelectedWorkspace(workspace);
-                    sessionStorage.setItem(
-                      "selectedWorkspace",
-                      JSON.stringify(workspace)
-                    );
-                  }}
+                  onClick={() => setSelectedWorkspace(workspace)}
                   cursor={"pointer"}
                   bg={selectedWorkspace === workspace ? "black" : "#e8e8e8"}
                   color={selectedWorkspace === workspace ? "white" : "black"}

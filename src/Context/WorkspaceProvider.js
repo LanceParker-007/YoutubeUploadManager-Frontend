@@ -23,7 +23,7 @@ const WorkspaceContextProvider = ({ children }) => {
       "https://www.googleapis.com/auth/youtube.upload",
       "https://www.googleapis.com/auth/userinfo.profile",
       "https://www.googleapis.com/auth/userinfo.email",
-      "https://www.googleapis.com/auth/youtube.force-ssl",
+      // "https://www.googleapis.com/auth/youtube.force-ssl",
     ];
 
     const authorizationUrl = `https://accounts.google.com/o/oauth2/auth?${queryString.stringify(
@@ -42,17 +42,11 @@ const WorkspaceContextProvider = ({ children }) => {
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-    const userSelectedWorkspace = JSON.parse(
-      sessionStorage.getItem("selectedWorkspace")
-    );
     // If user not logged in push it to "/"
     if (!userInfo) {
       return navigate("/");
     } else {
       setUser(userInfo);
-      if (userSelectedWorkspace) {
-        setSelectedWorkspace(userSelectedWorkspace);
-      }
       // return navigate("/workspace");
     }
   }, [navigate]);
