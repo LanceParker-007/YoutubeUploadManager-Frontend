@@ -54,10 +54,6 @@ const categories = [
   { id: "29", name: "Nonprofits & Activism" },
 ];
 
-// You can access category data by ID or name
-console.log(categories.find((category) => category.id === "10")); // Find by ID
-console.log(categories.find((category) => category.name === "Music")); // Find by Name
-
 const VideoInfo = () => {
   const { user, handleLogin } = useWorkspaceContext();
   const userServerFromSession = sessionStorage.getItem("userServer");
