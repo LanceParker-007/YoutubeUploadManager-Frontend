@@ -21,6 +21,7 @@ const SideDrawer = () => {
   //Logout Handler
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
+    sessionStorage.removeItem("userServer");
     return navigate("/homepage");
   };
 
