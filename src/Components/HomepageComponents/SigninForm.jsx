@@ -69,7 +69,6 @@ const SigninForm = () => {
       >
         *Only Google Accounts allowed by developer will be able to upload videos
         to youtube. <br />
-        *Since in demo mode, video size is limited to 40mb max.
       </Box>
     </Container>
   );
