@@ -54,48 +54,48 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
     };
   };
 
-  // version2
-  const uploadVideoOnYUM = async (e) => {
+  const uploadVideoToPlatform = async (e) => {
     e.preventDefault();
-
-    const cloudinaryForm = new FormData();
-    cloudinaryForm.append("file", video);
-    cloudinaryForm.append("upload_preset", "yum-app");
-    cloudinaryForm.append("cloud_name", "dk2fcl7bi");
-    cloudinaryForm.append(
-      "public_id",
-      `ProjectS/${title}${new Date().getTime()}`
-    );
+    // const file = e.target.files[0];
+    // This we stored in out vide
 
     try {
-      setLoading(true);
-      //Upload video to cloudinary
-      const { data } = await axios.post(
-        "https://api.cloudinary.com/v1_1/dk2fcl7bi/video/upload",
-        cloudinaryForm,
-        {
-          onUploadProgress: (progress) => {
-            setVideoUploaded(
-              Math.round((progress.loaded / progress.total) * 100)
-            );
-          },
-        }
-      );
+      // 1. Get Secure url from server
+      const response1 = await axios.post(`${server}/api/workspace/trial`, {
+        videoName: video.name,
+        videoType: video.type,
+      });
 
-      //get necessary video details
-      const video = {
+      // 2. Post the video directly to the s3 bucket
+      await axios.put(`${response1.data.signedURL}`, video, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progress) => {
+          setVideoUploaded(
+            Math.round((progress.loaded / progress.total) * 100)
+          );
+        },
+      });
+
+      const url = response1.data.signedURL.split("?")[0];
+      const public_id = response1.data.public_id;
+      // console.log(url);
+      // console.log(public_id);
+
+      // 3. Post req to my server to store any data
+      const videoInfo = {
         title: title,
-        description: description,
         video: {
-          public_id: data.public_id,
-          url: data.secure_url,
+          public_id: public_id,
+          url: url,
         },
         status: false,
       };
       //save video to DB
-      const response = await axios.post(
+      const response3 = await axios.post(
         `${server}/api/workspace/upload/${selectedWorkspace._id}`,
-        video,
+        videoInfo,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -106,7 +106,7 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
 
       fetchAllVideoDetails();
       toast({
-        title: `${response.data.video.title} uploaded to ${selectedWorkspace.workspaceName}`,
+        title: `${response3.data.video.title} uploaded to ${selectedWorkspace.workspaceName}`,
         status: "success",
         duration: 4000,
         isClosable: true,
@@ -120,23 +120,16 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
       setVideoPrev("");
       setVideoUploaded(0);
     } catch (error) {
-      setLoading(false);
+      console.log(error);
       toast({
-        title: "Video upload failed",
-        description: error.message,
+        title: "Error",
         status: "error",
-        duration: 4000,
-        isClosable: true,
-        position: "top",
+        duration: 1000,
       });
     }
   };
 
-  const uploadVideoToPlatform = async (e) => {
-    e.preventDefault();
-  };
-
-  //version1
+  //version1(First t o server than than cloudinary)
 
   // const uploadVideoOnYUM = async (e) => {
   //   e.preventDefault();
@@ -192,6 +185,84 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
   //   }
   // };
 
+  // version2 direct to cloudinary
+  // const uploadVideoOnYUM = async (e) => {
+  //   e.preventDefault();
+
+  //   const cloudinaryForm = new FormData();
+  //   cloudinaryForm.append("file", video);
+  //   cloudinaryForm.append("upload_preset", "yum-app");
+  //   cloudinaryForm.append("cloud_name", "dk2fcl7bi");
+  //   cloudinaryForm.append(
+  //     "public_id",
+  //     `ProjectS/${title}${new Date().getTime()}`
+  //   );
+
+  //   try {
+  //     setLoading(true);
+  //     //Upload video to cloudinary
+  //     const { data } = await axios.post(
+  //       "https://api.cloudinary.com/v1_1/dk2fcl7bi/video/upload",
+  //       cloudinaryForm,
+  //       {
+  //         onUploadProgress: (progress) => {
+  //           setVideoUploaded(
+  //             Math.round((progress.loaded / progress.total) * 100)
+  //           );
+  //         },
+  //       }
+  //     );
+
+  //     //get necessary video details
+  //     const video = {
+  //       title: title,
+  //       description: description,
+  //       video: {
+  //         public_id: data.public_id,
+  //         url: data.secure_url,
+  //       },
+  //       status: false,
+  //     };
+  //     //save video to DB
+  //     const response = await axios.post(
+  //       `${server}/api/workspace/upload/${selectedWorkspace._id}`,
+  //       video,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${user.token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     fetchAllVideoDetails();
+  //     toast({
+  //       title: `${response.data.video.title} uploaded to ${selectedWorkspace.workspaceName}`,
+  //       status: "success",
+  //       duration: 4000,
+  //       isClosable: true,
+  //       position: "top",
+  //     });
+  //     setLoading(false);
+  //     onClose();
+  //     setTitle("");
+  //     setDescription("");
+  //     setVideo("");
+  //     setVideoPrev("");
+  //     setVideoUploaded(0);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     toast({
+  //       title: "Video upload failed",
+  //       description: error.message,
+  //       status: "error",
+  //       duration: 4000,
+  //       isClosable: true,
+  //       position: "top",
+  //     });
+  //   }
+  // };
+
   return (
     <>
       <Tooltip
@@ -220,7 +291,7 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
             alignItems={"center"}
           >
             {/* -----Form----- */}
-            <form onSubmit={uploadVideoOnYUM}>
+            <form onSubmit={uploadVideoToPlatform}>
               <VStack m={"auto"} spacing={4}>
                 <Input
                   id="title"
@@ -268,7 +339,7 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
                     </CircularProgress>
                   </>
                 )}
-
+                {/* Cloudinary Upload */}
                 <Button
                   isLoading={loading}
                   w={"full"}

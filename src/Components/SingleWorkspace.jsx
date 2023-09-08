@@ -104,6 +104,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
         position: "top",
       });
     } catch (error) {
+      console.log(error);
       setUploadToYtBtnloading(false);
       toast({
         title: "Video upload to Yt failed",

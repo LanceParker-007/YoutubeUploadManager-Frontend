@@ -41,11 +41,18 @@ const WorkspaceContextProvider = ({ children }) => {
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    const userSelectedWorkspace = JSON.parse(
+      sessionStorage.getItem("selectedWorkspace")
+    );
     // If user not logged in push it to "/"
     if (!userInfo) {
       return navigate("/");
     } else {
       setUser(userInfo);
+      if (userSelectedWorkspace) {
+        setSelectedWorkspace(userSelectedWorkspace);
+      }
       // return navigate("/workspace");
     }
   }, [navigate]);

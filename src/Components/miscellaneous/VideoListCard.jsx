@@ -1,17 +1,4 @@
-import {
-  Button,
-  HStack,
-  // Heading,
-  // Modal,
-  // ModalBody,
-  // ModalCloseButton,
-  // ModalContent,
-  // ModalHeader,
-  // ModalOverlay,
-  Text,
-  // useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
+import { Button, HStack, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 // import Cookies from "js-cookie";
@@ -26,7 +13,6 @@ const VideoListCard = ({
   uploadToYtBtnloading,
 }) => {
   const { user, selectedWorkspace, handleLogin } = useWorkspaceContext();
-  // const { isOpen, onOpen, onClose } = useDisclosure();
   const [videoTitle, setVideoTitle] = useState(video.title);
   const toast = useToast();
   const userServerFromSession = sessionStorage.getItem("userServer");
@@ -140,29 +126,6 @@ const VideoListCard = ({
             ))}
         </div>
       </HStack>
-      {/* Modal to watch video  */}
-      {/* <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader
-            fontSize={"40px"}
-            display={"flex"}
-            justifyContent={"center"}
-          >
-            <Heading fontFamily={"body"}>{video.title}</Heading>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-          >
-            <video controls controlsList="nodownload">
-              <source src={video.video.url} type="video/mp4" />
-            </video>
-          </ModalBody>
-        </ModalContent>
-      </Modal> */}
     </>
   );
 };

@@ -13,7 +13,9 @@ import { useState } from "react";
 import server from "../../index";
 
 const ConnectToServer = ({ userServer, setUserServer }) => {
-  const [inputServer, setInputServer] = useState(""); //singleworkspace se leke aate isko
+  const [inputServer, setInputServer] = useState(
+    "https://yum-backend.vercel.app"
+  ); //singleworkspace se leke aate isko
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 

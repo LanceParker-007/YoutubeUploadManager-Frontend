@@ -11,11 +11,14 @@ import {
   HStack,
   Heading,
   Input,
+  Select,
   Textarea,
   VStack,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
+import { FaYoutube } from "react-icons/fa";
 
 // Input File Style
 const fileUploadCss = {
@@ -32,7 +35,33 @@ const fileUploadStyle = {
   "&::file-selector-button": fileUploadCss,
 };
 
+// Youtube Categories
+const categories = [
+  { id: "1", name: "Film & Animation" },
+  { id: "2", name: "Autos & Vehicles" },
+  { id: "10", name: "Music" },
+  { id: "15", name: "Pets & Animals" },
+  { id: "17", name: "Sports" },
+  { id: "19", name: "Travel & Events" },
+  { id: "20", name: "Gaming" },
+  { id: "22", name: "People & Blogs" },
+  { id: "23", name: "Comedy" },
+  { id: "24", name: "Entertainment" },
+  { id: "25", name: "News & Politics" },
+  { id: "26", name: "Howto & Style" },
+  { id: "27", name: "Education" },
+  { id: "28", name: "Science & Technology" },
+  { id: "29", name: "Nonprofits & Activism" },
+];
+
+// You can access category data by ID or name
+console.log(categories.find((category) => category.id === "10")); // Find by ID
+console.log(categories.find((category) => category.name === "Music")); // Find by Name
+
 const VideoInfo = () => {
+  const { user, handleLogin } = useWorkspaceContext();
+  const userServerFromSession = sessionStorage.getItem("userServer");
+
   const { workspaceId, videoId } = useParams();
   const [loading, setLoading] = useState(false);
   const [saveChangesLoading, setSaveChangesLoading] = useState(false);
@@ -67,7 +96,6 @@ const VideoInfo = () => {
         // console.log(userServer);
         const { data } = await axios.get(`${userServer}/getytaccesstoken`);
         setAccessToken(data.ytAccessToken);
-        console.log(accessToken);
       } catch (error) {
         toast({
           title: `Failed to fecth ytAccessToken:`,
@@ -96,14 +124,14 @@ const VideoInfo = () => {
           data.videoInfo.description ? data.videoInfo.description : ""
         );
         setCategory(data.videoInfo.category ? data.videoInfo.category : "");
-        setTags(data.videoInfo.tags ? data.videoInfo.tags : "");
+        setTags(data.videoInfo.tags ? data.videoInfo.tags.toString() : "");
         setThumbnailUrl(
           data.videoInfo.thumbnail?.url ? data.videoInfo.thumbnail?.url : ""
         );
         setYoutubeId(data.videoInfo.youtubeId ? data.videoInfo.youtubeId : "");
         setLoading(false);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         toast({
           title: "Error fetching video",
           status: "error",
@@ -137,10 +165,16 @@ const VideoInfo = () => {
     };
   };
 
-  //Save the thumbnail to db
+  //Save the thumbnail to db in workspaceController
   const saveThumbnail = async () => {
-    console.log("saveThumbnail");
+    // console.log("saveThumbnail");
     if (!thumbnail) {
+      toast({
+        title: "select a thumbnail",
+        duration: 1000,
+        position: "top",
+        status: "warning",
+      });
       return;
     }
     const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -188,7 +222,7 @@ const VideoInfo = () => {
       });
       setThumbnailLoading(false);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setThumbnailLoading(false);
       toast({
         title: "Thumbnail update failed",
@@ -200,7 +234,7 @@ const VideoInfo = () => {
     }
   };
 
-  //Save changes
+  //Save changes in Workspace controller
   const saveChanges = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -228,7 +262,8 @@ const VideoInfo = () => {
       });
       setSaveChangesLoading(false);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      setSaveChangesLoading(false);
       toast({
         title: "Error updating video info",
         status: "error",
@@ -238,11 +273,21 @@ const VideoInfo = () => {
     }
   };
 
-  //Make it Youtube thumbnail
+  //Push thumbnail to Youtube in YoutubeController
   const makeItYoutubeThumbnail = async () => {
+    if (!userServer || userServer.length === 0) {
+      toast({
+        title: "Connect to a server first!",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
     if (!youtubeId) {
       toast({
-        title: "Upload to youtube first",
+        title: "Upload Video to youtube first",
         status: "warning",
         duration: 2000,
         position: "top",
@@ -250,22 +295,77 @@ const VideoInfo = () => {
       return;
     }
     try {
-      //replace in cloudinary
-      //save to db
-      //upload to youtube
-      const response2 = await axios.post(
-        `${server}/api/youtubecontrol/updatevideothumbnail/${workspaceId}/${videoId}`,
+      //1. place in cloudinary
+      if (!thumbnail) {
+        toast({
+          title: "select a thumbnail",
+          duration: 1000,
+          position: "top",
+          status: "warning",
+        });
+        return;
+      }
+
+      const cloudinaryForm = new FormData();
+      cloudinaryForm.append("file", thumbnail);
+      cloudinaryForm.append("upload_preset", "yum-app");
+      cloudinaryForm.append("cloud_name", "dk2fcl7bi");
+
+      cloudinaryForm.append(
+        "public_id",
+        `ProjectS/${thumbnail.name}${new Date().getTime()}`
+      );
+
+      setThumbnailLoading(true);
+      //Upload thumbnail to cloudinary
+      const { data } = await axios.post(
+        "https://api.cloudinary.com/v1_1/dk2fcl7bi/image/upload",
+        cloudinaryForm
+      );
+
+      //get necessary video details
+      const thumbnailInfo = {
+        public_id: data.public_id,
+        url: data.secure_url,
+      };
+
+      //2. save to db
+      const response = await axios.put(
+        `${server}/api/workspace/updatethumbnail/${workspaceId}/${videoId}`,
+        thumbnailInfo,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      toast({
+        title: `${response.data.message}`,
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+
+      //3. upload to youtube
+      // const response2 =
+      await axios.post(
+        `${userServer}/api/youtubecontrol/updatevideothumbnail/${workspaceId}/${videoId}`,
         { youtubeId, accessToken }
       );
-      console.log(response2.data);
+      // console.log(response2.data);
       toast({
-        title: "Thumbnail updated",
+        title: "Thumbnail updated to Youtube",
         status: "success",
         position: "top",
         duration: 2000,
       });
+      setThumbnailLoading(false);
     } catch (error) {
-      console.log(error.response.data.message);
+      setThumbnailLoading(false);
+      // console.log(error.response.data.message);
       toast({
         title: "Error while updating thumbnail",
         status: "error",
@@ -276,46 +376,151 @@ const VideoInfo = () => {
   };
 
   //Push Changes to youtube
-  const pushChanges = () => {
+  const pushChanges = async () => {
+    if (!userServer || userServer.length === 0) {
+      toast({
+        title: "Connect to a server first!",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+    if (!youtubeId) {
+      toast({
+        title: "Upload Video to youtube first",
+        status: "warning",
+        duration: 2000,
+        position: "top",
+      });
+      return;
+    }
+    const user = JSON.parse(localStorage.getItem("userInfo"));
     try {
+      // 1. save changes in th db
+      setSaveChangesLoading(true);
+      const { data } = await axios.put(
+        `${server}/api/workspace/${workspaceId}/${videoId}`,
+        {
+          title,
+          description,
+          category,
+          tags,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      toast({
+        title: `${data.message}`,
+        status: "success",
+        duration: "1000",
+        position: "top",
+      });
+
+      // 2. push changes to youtube
+      // const response =
+      await axios.post(
+        `${userServer}/api/youtubecontrol/pushchangestoyoutube/${workspaceId}/${videoId}`,
+        { youtubeId, accessToken }
+      );
+      // console.log(response.data);
+      toast({
+        title: "Video info updated on Youtube!",
+        status: "success",
+        position: "top",
+        duration: 2000,
+      });
+
+      setSaveChangesLoading(false);
     } catch (error) {}
   };
 
+  //Login to Youtueb
+  const LoginToYoutube = () => {
+    if (!userServerFromSession || userServerFromSession.length === 0) {
+      toast({
+        title: "Connect to a server first!",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+    handleLogin(userServerFromSession);
+  };
+
   return loading ? (
-    <h1>Loading...</h1>
+    <Heading>Loading...</Heading>
   ) : (
     <Box p={{ base: "1", md: "5" }}>
-      <HStack justifyContent={"space-between"} p={2}>
-        <Heading>Video details</Heading>
-        <div>
+      <Box
+        display={"flex"}
+        flexDirection={{ base: "column", md: "row" }}
+        justifyContent={{ base: "center", md: "space-between" }}
+        alignItems={{ base: "center", md: "center" }}
+        p={2}
+      >
+        <Heading>Video Info</Heading>
+        <HStack>
           <Button
             isLoading={saveChangesLoading}
             colorScheme={"blue"}
             onClick={saveChanges}
+            width={"7rem"}
           >
             Save
           </Button>
-          <Button
-            isLoading={saveChangesLoading}
-            colorScheme={"blue"}
-            // onClick={pushChanges}
-          >
-            Push
-          </Button>
-        </div>
-      </HStack>
+
+          {accessToken ? (
+            <Button
+              isLoading={saveChangesLoading}
+              colorScheme={"blue"}
+              onClick={pushChanges}
+              width={"7rem"}
+            >
+              Push
+            </Button>
+          ) : (
+            <Button
+              colorScheme={"yellow"}
+              onClick={LoginToYoutube}
+              rightIcon={<FaYoutube size={"2rem"} color="red" />}
+            >
+              Login
+            </Button>
+          )}
+        </HStack>
+      </Box>
       <Box display={"flex"} flexDirection={{ base: "column", md: "row" }}>
-        <VStack bg={"aliceblue"} p={2} borderRadius={6}>
+        <VStack
+          bg={"aliceblue"}
+          p={2}
+          borderRadius={6}
+          width={{ base: "100%", md: "60%", lg: "40%" }}
+        >
           <video controls controlsList="nodownload">
             <source src={videoUrl} type="video/mp4" />
           </video>
-          <Input
-            accept="image/*"
-            type="file"
-            focusBorderColor={"yellow.500"}
-            css={fileUploadStyle}
-            onChange={changeThumbnailHandler}
-          />
+          <FormControl
+            my={2}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"center"}
+          >
+            <FormLabel m={0}>Select Thumbail Below</FormLabel>
+            <Input
+              accept="image/*"
+              type="file"
+              focusBorderColor={"yellow.500"}
+              css={fileUploadStyle}
+              onChange={changeThumbnailHandler}
+            />
+          </FormControl>
           {(thumbnailPrev || thumbnailUrl) && (
             <>
               <img src={thumbnailPrev || thumbnailUrl} alt="thumbnail" />
@@ -327,13 +532,25 @@ const VideoInfo = () => {
                 >
                   Save Thumbnail
                 </Button>
-                <Button
-                  isLoading={thumbnailLoading}
-                  colorScheme="green"
-                  onClick={makeItYoutubeThumbnail}
-                >
-                  Push to Youtube
-                </Button>
+                {accessToken ? (
+                  <Button
+                    isLoading={thumbnailLoading}
+                    colorScheme="green"
+                    onClick={makeItYoutubeThumbnail}
+                  >
+                    Push to Youtube
+                  </Button>
+                ) : (
+                  <Button
+                    colorScheme={"yellow"}
+                    onClick={LoginToYoutube}
+                    rightIcon={
+                      <FaYoutube size={"2rem"} color="red" width={"4rem"} />
+                    }
+                  >
+                    Login
+                  </Button>
+                )}
               </HStack>
             </>
           )}
@@ -372,10 +589,19 @@ const VideoInfo = () => {
             padding={2}
           >
             <FormLabel m={0}>Category</FormLabel>
-            <Input
+            <Select
+              id="category"
+              name="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-            />
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </Select>
           </FormControl>
           <FormControl
             borderRadius={6}
@@ -390,7 +616,7 @@ const VideoInfo = () => {
               value={tags}
               resize={"none"}
               onChange={(e) => {
-                setTags(e.target.value);
+                setTags(e.target.value.toString());
               }}
             />
           </FormControl>
