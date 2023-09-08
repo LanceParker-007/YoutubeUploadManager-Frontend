@@ -302,14 +302,14 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
                   focusBorderColor="purple.300"
                   isRequired
                 />
-                <Input
+                {/* <Input
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Description"
                   type="text"
                   focusBorderColor="purple.300"
-                />
+                /> */}
                 <Input
                   name="File name"
                   id="file"
