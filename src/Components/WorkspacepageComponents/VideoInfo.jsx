@@ -456,15 +456,16 @@ const VideoInfo = () => {
   return loading ? (
     <Heading>Loading...</Heading>
   ) : (
-    <Box p={{ base: "1", md: "5" }}>
+    <Box p={{ base: "1", md: "5" }} bg={"blackAlpha.700"}>
       <Box
         display={"flex"}
         flexDirection={{ base: "column", md: "row" }}
         justifyContent={{ base: "center", md: "space-between" }}
         alignItems={{ base: "center", md: "center" }}
         p={2}
+        fontFamily={"monospace"}
       >
-        <Heading>Video Info</Heading>
+        <Heading fontFamily={"monospace"}>Video Info</Heading>
         <HStack>
           <Button
             isLoading={saveChangesLoading}
@@ -501,6 +502,9 @@ const VideoInfo = () => {
           p={2}
           borderRadius={6}
           width={{ base: "100%", md: "60%", lg: "40%" }}
+          border={"1px"}
+          borderColor={"blackAlpha.200"}
+          fontFamily={"monospace"}
         >
           <video controls controlsList="nodownload">
             <source src={videoUrl} type="video/mp4" />
@@ -554,7 +558,15 @@ const VideoInfo = () => {
             </>
           )}
         </VStack>
-        <Box width={{ base: "full", md: "70%" }} mx={"auto"}>
+        <Box
+          bg={"aliceblue"}
+          width={{ base: "full", md: "70%" }}
+          mx={"auto"}
+          border={"1px"}
+          borderColor={"blackAlpha.200"}
+          borderRadius={6}
+          fontFamily={"monospace"}
+        >
           <FormControl
             borderRadius={6}
             my={1}
@@ -563,7 +575,11 @@ const VideoInfo = () => {
             padding={2}
           >
             <FormLabel m={0}>Title</FormLabel>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Input
+              bg={"white"}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </FormControl>
           <FormControl
             borderRadius={6}
@@ -575,6 +591,7 @@ const VideoInfo = () => {
             <FormLabel m={0}>Description</FormLabel>
             <Textarea
               value={description}
+              bg={"white"}
               rows={10}
               resize={"none"}
               onChange={(e) => setDescription(e.target.value)}
@@ -613,6 +630,7 @@ const VideoInfo = () => {
             <Textarea
               rows={10}
               value={tags}
+              bg={"white"}
               resize={"none"}
               onChange={(e) => {
                 setTags(e.target.value.toString());
