@@ -13,6 +13,7 @@ import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const SideDrawer = () => {
   const { user } = useWorkspaceContext();
@@ -22,6 +23,7 @@ const SideDrawer = () => {
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
     sessionStorage.removeItem("userServer");
+    Cookies.remove("yt_access_token");
     return navigate("/homepage");
   };
 

@@ -19,6 +19,7 @@ import {
 import { useEffect } from "react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 import { FaYoutube } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 // Input File Style
 const fileUploadCss = {
@@ -78,24 +79,24 @@ const VideoInfo = () => {
   const [userServer, setUserServer] = useState("");
   const [accessToken, setAccessToken] = useState();
 
-  const fetchYtAccessToken = async () => {
-    if (!userServer || userServer.length === 0) {
-      return;
-    }
-    try {
-      // console.log(userServer);
-      const { data } = await axios.get(`${userServer}/getytaccesstoken`);
-      setAccessToken(data.ytAccessToken);
-    } catch (error) {
-      toast({
-        title: `Failed to fecth ytAccessToken:`,
-        status: error,
-        duration: 4000,
-        isClosable: true,
-        position: "top",
-      });
-    }
-  };
+  // const fetchYtAccessToken = async () => {
+  //   if (!userServer || userServer.length === 0) {
+  //     return;
+  //   }
+  //   try {
+  //     // console.log(userServer);
+  //     const { data } = await axios.get(`${userServer}/getytaccesstoken`);
+  //     setAccessToken(data.ytAccessToken);
+  //   } catch (error) {
+  //     toast({
+  //       title: `Failed to fecth ytAccessToken:`,
+  //       status: error,
+  //       duration: 4000,
+  //       isClosable: true,
+  //       position: "top",
+  //     });
+  //   }
+  // };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -104,7 +105,9 @@ const VideoInfo = () => {
     }
     // Fetch Token from userServer
 
-    fetchYtAccessToken();
+    // fetchYtAccessToken();
+    const yt_access_token_cookie = Cookies.get("yt_access_token");
+    if (yt_access_token_cookie) setAccessToken(yt_access_token_cookie);
     const fetchVideoDetails = async () => {
       try {
         setLoading(true);
@@ -435,7 +438,16 @@ const VideoInfo = () => {
       });
 
       setSaveChangesLoading(false);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      setSaveChangesLoading(false);
+      toast({
+        title: "Video info updated on Youtube! Failed!",
+        status: "error",
+        position: "top",
+        duration: 2000,
+      });
+    }
   };
 
   //Login to Youtueb
