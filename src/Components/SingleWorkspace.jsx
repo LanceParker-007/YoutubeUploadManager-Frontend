@@ -147,7 +147,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     if (yt_access_token_cookie) setAccessToken(yt_access_token_cookie);
     fetchAllVideoDetails();
     // fetchYtAccessToken();
-    const fetchCookie = Cookies.get("yt_access_token");
+    const fetchCookie = Cookies.get();
     console.log(fetchCookie);
 
     // console.log(server)
