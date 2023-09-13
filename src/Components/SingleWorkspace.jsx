@@ -147,8 +147,8 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     if (yt_access_token_cookie) setAccessToken(yt_access_token_cookie);
     fetchAllVideoDetails();
     // fetchYtAccessToken();
-    // const fetchCookie = Cookies.get("yt_access_token");
-    // console.log(fetchCookie);
+    const fetchCookie = Cookies.get("yt_access_token");
+    console.log(fetchCookie);
 
     // console.log(server)
     // eslint-disable-next-line react-hooks/exhaustive-deps
