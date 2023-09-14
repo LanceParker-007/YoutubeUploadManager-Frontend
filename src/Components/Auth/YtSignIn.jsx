@@ -24,9 +24,10 @@ const YtSignIn = () => {
       }
 
       // Store the hashObject in sessionStorage
+      const expiryTime = 1 / 24;
       sessionStorage.setItem("hashData", JSON.stringify(hashObject));
       Cookies.set("yt_access_token", hashObject["access_token"], {
-        expires: 3600,
+        expires: expiryTime,
       });
 
       navigate("/workspace");
