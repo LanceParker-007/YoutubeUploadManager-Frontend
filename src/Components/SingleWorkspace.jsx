@@ -22,13 +22,17 @@ import ConnectToServer from "./ConnectToServerComponents/ConnectToServer";
 import Cookies from "js-cookie";
 
 const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
-  const { user, selectedWorkspace, setSelectedWorkspace } =
-    useWorkspaceContext();
+  const {
+    user,
+    selectedWorkspace,
+    setSelectedWorkspace,
+    accessToken,
+    setAccessToken,
+  } = useWorkspaceContext();
   const [uploadToYtBtnloading, setUploadToYtBtnloading] = useState(false);
   const [loadingWorkspaceVideos, setLoadingWorkspaceVideos] = useState(false);
   const toast = useToast();
   const [displayVideos, setDisplayVideos] = useState([]);
-  const [accessToken, setAccessToken] = useState(null);
 
   // -----
   const [userServer, setUserServer] = useState("");
@@ -118,39 +122,17 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
-  // Fetch Token from userServer
-  // const fetchYtAccessToken = async () => {
-  //   if (!userServer || userServer.length === 0) {
-  //     return;
-  //   }
-  //   try {
-  //     // console.log(userServer);
-  //     const { data } = await axios.get(`${userServer}/getytaccesstoken`);
-  //     setAccessToken(data.ytAccessToken);
-  //     // console.log(accessToken);
-  //   } catch (error) {
-  //     toast({
-  //       title: `Failed to fecth ytAccessToken:`,
-  //       status: error,
-  //       duration: 4000,
-  //       isClosable: true,
-  //       position: "top",
-  //     });
-  //   }
-  // };
-
   useEffect(() => {
     if (sessionStorage.getItem("userServer")) {
       setUserServer(sessionStorage.getItem("userServer"));
     }
     const yt_access_token_cookie = Cookies.get("yt_access_token");
-    if (yt_access_token_cookie) setAccessToken(yt_access_token_cookie);
+    if (yt_access_token_cookie) {
+      setAccessToken(yt_access_token_cookie);
+    } else {
+      setAccessToken(null);
+    }
     fetchAllVideoDetails();
-    // fetchYtAccessToken();
-    const fetchCookie = Cookies.get();
-    console.log(fetchCookie);
-
-    // console.log(server)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedWorkspace, userServer]);
 

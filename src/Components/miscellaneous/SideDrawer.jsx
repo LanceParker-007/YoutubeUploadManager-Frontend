@@ -23,6 +23,7 @@ const SideDrawer = () => {
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
     sessionStorage.removeItem("userServer");
+    sessionStorage.removeItem("hashData");
     Cookies.remove("yt_access_token");
     return navigate("/homepage");
   };

@@ -1,5 +1,5 @@
+import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
-import queryString from "query-string";
 import { useNavigate } from "react-router-dom";
 
 const WorkspaceContext = createContext();
@@ -11,32 +11,37 @@ const WorkspaceContextProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [workspaces, setWorkspaces] = useState([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState();
+  const [accessToken, setAccessToken] = useState(null);
 
-  const handleLogin = (userServer) => {
-    //Login to Youtube account vala section idhar copy karna padega
-    // redirectUri = https://test-yum-backend.vercel.app/google/callback
+  const handleLogin = () => {
+    console.log("yo here");
+    let oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 
-    const clientId = process.env.REACT_APP_CLIENT_ID;
-    const redirectUri = `${userServer}/google/callback`; //CLIENT_REDIRECT_URI_SERVER
-    // console.log(redirectUri);
-    const scopes = [
-      "https://www.googleapis.com/auth/youtube.upload",
-      "https://www.googleapis.com/auth/userinfo.profile",
-      "https://www.googleapis.com/auth/userinfo.email",
-      // "https://www.googleapis.com/auth/youtube.force-ssl",
-    ];
+    let form = document.createElement("form");
+    form.setAttribute("method", "GET");
+    form.setAttribute("action", oauth2Endpoint);
 
-    const authorizationUrl = `https://accounts.google.com/o/oauth2/auth?${queryString.stringify(
-      {
-        client_id: clientId,
-        redirect_uri: redirectUri,
-        scope: scopes.join(" "),
-        response_type: "code",
-      }
-    )}`;
+    let params = {
+      client_id: process.env.REACT_APP_CLIENT_ID,
+      redirect_uri: process.env.REACT_APP_PROD_REDIRECT_URI,
+      response_type: "token",
+      scope: [
+        "https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+      ],
+      include_granted_scopes: "true",
+      state: "pass-through-value",
+    };
 
-    //--------------------------------------------------------
-    window.location.href = authorizationUrl;
+    for (let p in params) {
+      let input = document.createElement("input");
+      input.setAttribute("type", "hidden");
+      input.setAttribute("name", p);
+      input.setAttribute("value", params[p]);
+      form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
   };
 
   useEffect(() => {
@@ -47,7 +52,10 @@ const WorkspaceContextProvider = ({ children }) => {
       return navigate("/");
     } else {
       setUser(userInfo);
-      // return navigate("/workspace");
+      const yt_access_token_cookie = Cookies.get("yt_access_token");
+      if (yt_access_token_cookie) {
+        setAccessToken(yt_access_token_cookie);
+      }
     }
   }, [navigate]);
 
@@ -62,6 +70,8 @@ const WorkspaceContextProvider = ({ children }) => {
         selectedWorkspace,
         setSelectedWorkspace,
         handleLogin,
+        accessToken,
+        setAccessToken,
       }}
     >
       {children}

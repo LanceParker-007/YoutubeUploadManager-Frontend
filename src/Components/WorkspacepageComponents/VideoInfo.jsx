@@ -19,7 +19,6 @@ import {
 import { useEffect } from "react";
 import { useWorkspaceContext } from "../../Context/WorkspaceProvider";
 import { FaYoutube } from "react-icons/fa";
-import Cookies from "js-cookie";
 
 // Input File Style
 const fileUploadCss = {
@@ -56,7 +55,8 @@ const categories = [
 ];
 
 const VideoInfo = () => {
-  const { user, handleLogin } = useWorkspaceContext();
+  const { user, handleLogin, accessToken, setAccessToken } =
+    useWorkspaceContext();
   const userServerFromSession = sessionStorage.getItem("userServer");
 
   const { workspaceId, videoId } = useParams();
@@ -77,37 +77,13 @@ const VideoInfo = () => {
   const [thumbnailUrl, setThumbnailUrl] = useState();
   const [youtubeId, setYoutubeId] = useState("");
   const [userServer, setUserServer] = useState("");
-  const [accessToken, setAccessToken] = useState();
-
-  // const fetchYtAccessToken = async () => {
-  //   if (!userServer || userServer.length === 0) {
-  //     return;
-  //   }
-  //   try {
-  //     // console.log(userServer);
-  //     const { data } = await axios.get(`${userServer}/getytaccesstoken`);
-  //     setAccessToken(data.ytAccessToken);
-  //   } catch (error) {
-  //     toast({
-  //       title: `Failed to fecth ytAccessToken:`,
-  //       status: error,
-  //       duration: 4000,
-  //       isClosable: true,
-  //       position: "top",
-  //     });
-  //   }
-  // };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     if (sessionStorage.getItem("userServer")) {
       setUserServer(sessionStorage.getItem("userServer"));
     }
-    // Fetch Token from userServer
 
-    // fetchYtAccessToken();
-    const yt_access_token_cookie = Cookies.get("yt_access_token");
-    if (yt_access_token_cookie) setAccessToken(yt_access_token_cookie);
     const fetchVideoDetails = async () => {
       try {
         setLoading(true);

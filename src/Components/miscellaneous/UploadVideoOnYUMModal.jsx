@@ -35,7 +35,6 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
   const { user, selectedWorkspace } = useWorkspaceContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [video, setVideo] = useState();
   const [videoPrev, setVideoPrev] = useState();
   const [loading, setLoading] = useState(false);
@@ -115,7 +114,6 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
       setLoading(false);
       onClose();
       setTitle("");
-      setDescription("");
       setVideo("");
       setVideoPrev("");
       setVideoUploaded(0);
@@ -128,140 +126,6 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
       });
     }
   };
-
-  //version1(First t o server than than cloudinary)
-
-  // const uploadVideoOnYUM = async (e) => {
-  //   e.preventDefault();
-
-  //   const myForm = new FormData();
-  //   myForm.append("title", title);
-  //   myForm.append("description", description);
-  //   myForm.append("file", video);
-
-  //   try {
-  //     setLoading(true);
-  //     const { data } = await axios.post(
-  //       `${server}/api/workspace/upload/${selectedWorkspace._id}`,
-  //       myForm,
-  // {
-  //   onUploadProgress: (progress) => {
-  //     setVideoUploaded(
-  //       Math.round((progress.loaded / (2 * progress.total)) * 100)
-  //     );
-  //   },
-  //   headers: {
-  //     Authorization: `Bearer ${user.token}`,
-  //     "Content-Type": "multipart/form-data",
-  //   },
-  // }
-  //     );
-
-  // fetchAllVideoDetails();
-  // toast({
-  //   title: `${data.video.title} uploaded to ${selectedWorkspace.workspaceName}`,
-  //   status: "success",
-  //   duration: 4000,
-  //   isClosable: true,
-  //   position: "top",
-  // });
-  // setLoading(false);
-  // onClose();
-  // setTitle("");
-  // setDescription("");
-  // setVideo("");
-  // setVideoPrev("");
-  // setVideoUploaded(0);
-  //   } catch (error) {
-  // setLoading(false);
-  // toast({
-  //   title: "Video upload failed",
-  //   description: error.message,
-  //   status: "error",
-  //   duration: 4000,
-  //   isClosable: true,
-  //   position: "top",
-  // });
-  //   }
-  // };
-
-  // version2 direct to cloudinary
-  // const uploadVideoOnYUM = async (e) => {
-  //   e.preventDefault();
-
-  //   const cloudinaryForm = new FormData();
-  //   cloudinaryForm.append("file", video);
-  //   cloudinaryForm.append("upload_preset", "yum-app");
-  //   cloudinaryForm.append("cloud_name", "dk2fcl7bi");
-  //   cloudinaryForm.append(
-  //     "public_id",
-  //     `ProjectS/${title}${new Date().getTime()}`
-  //   );
-
-  //   try {
-  //     setLoading(true);
-  //     //Upload video to cloudinary
-  //     const { data } = await axios.post(
-  //       "https://api.cloudinary.com/v1_1/dk2fcl7bi/video/upload",
-  //       cloudinaryForm,
-  //       {
-  //         onUploadProgress: (progress) => {
-  //           setVideoUploaded(
-  //             Math.round((progress.loaded / progress.total) * 100)
-  //           );
-  //         },
-  //       }
-  //     );
-
-  //     //get necessary video details
-  //     const video = {
-  //       title: title,
-  //       description: description,
-  //       video: {
-  //         public_id: data.public_id,
-  //         url: data.secure_url,
-  //       },
-  //       status: false,
-  //     };
-  //     //save video to DB
-  //     const response = await axios.post(
-  //       `${server}/api/workspace/upload/${selectedWorkspace._id}`,
-  //       video,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${user.token}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-
-  //     fetchAllVideoDetails();
-  //     toast({
-  //       title: `${response.data.video.title} uploaded to ${selectedWorkspace.workspaceName}`,
-  //       status: "success",
-  //       duration: 4000,
-  //       isClosable: true,
-  //       position: "top",
-  //     });
-  //     setLoading(false);
-  //     onClose();
-  //     setTitle("");
-  //     setDescription("");
-  //     setVideo("");
-  //     setVideoPrev("");
-  //     setVideoUploaded(0);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     toast({
-  //       title: "Video upload failed",
-  //       description: error.message,
-  //       status: "error",
-  //       duration: 4000,
-  //       isClosable: true,
-  //       position: "top",
-  //     });
-  //   }
-  // };
 
   return (
     <>
@@ -302,14 +166,6 @@ const UploadVideoOnYUMModal = ({ fetchAllVideoDetails }) => {
                   focusBorderColor="purple.300"
                   isRequired
                 />
-                {/* <Input
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Description"
-                  type="text"
-                  focusBorderColor="purple.300"
-                /> */}
                 <Input
                   name="File name"
                   id="file"
