@@ -74,6 +74,8 @@ const GroupModalChat = ({ children }) => {
     }
 
     try {
+      setLoading(true);
+
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -98,11 +100,13 @@ const GroupModalChat = ({ children }) => {
         isClosable: true,
         position: "top",
       });
+      setLoading(false);
       setWorkspaceName("");
       setSelectedUsers([]);
       setSearch("");
       setSearchResult([]);
     } catch (error) {
+      setLoading(false);
       toast({
         title: "Failed to create group chat",
         description: error.response.data,
@@ -185,7 +189,11 @@ const GroupModalChat = ({ children }) => {
                   }
                 }}
               />
-              <Button colorScheme="yellow" onClick={handleSearch}>
+              <Button
+                isLoading={loading}
+                colorScheme="yellow"
+                onClick={handleSearch}
+              >
                 Search
               </Button>
             </HStack>
@@ -217,7 +225,11 @@ const GroupModalChat = ({ children }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" onClick={handleSubmit}>
+            <Button
+              isLoading={loading}
+              colorScheme="blue"
+              onClick={handleSubmit}
+            >
               Create
             </Button>
           </ModalFooter>
