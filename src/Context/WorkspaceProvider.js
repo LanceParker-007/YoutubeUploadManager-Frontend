@@ -57,7 +57,7 @@ const WorkspaceContextProvider = ({ children }) => {
     const isPublicRoute = publicRoutes.includes(currentPath);
 
     // If user not logged in and it's not a public route, push to "/"
-    if (!userInfo || !isPublicRoute) {
+    if (!userInfo && !isPublicRoute) {
       navigate("/");
     } else {
       setUser(userInfo);
