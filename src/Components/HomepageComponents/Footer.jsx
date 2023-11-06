@@ -1,6 +1,7 @@
 import { Box, Button, Heading, Link, Text } from "@chakra-ui/react";
 import React from "react";
 import { FaTwitter } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -41,6 +42,9 @@ const Footer = () => {
           </Button>
         </Link>
       </Box>
+      <NavLink style={{ color: "white" }} to={"/privacy-policy"}>
+        Read Privacy Policy
+      </NavLink>
     </Box>
   );
 };

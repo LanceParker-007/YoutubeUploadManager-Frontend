@@ -2,6 +2,11 @@ import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const publicRoutes = [
+  "/privacy-policy", // Add other public routes as needed
+  // ... other public route paths
+];
+
 const WorkspaceContext = createContext();
 
 // eslint-disable-next-line react/prop-types
@@ -23,7 +28,7 @@ const WorkspaceContextProvider = ({ children }) => {
 
     let params = {
       client_id: process.env.REACT_APP_CLIENT_ID,
-      redirect_uri: process.env.REACT_APP_PROD_REDIRECT_URI,
+      redirect_uri: process.env.REACT_APP_DEV_REDIRECT_URI,
       response_type: "token",
       scope: [
         "https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
@@ -46,10 +51,14 @@ const WorkspaceContextProvider = ({ children }) => {
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const currentPath = window.location.pathname; // Get the current route path
 
-    // If user not logged in push it to "/"
-    if (!userInfo) {
-      return navigate("/");
+    // Check if the current path is one of the public routes
+    const isPublicRoute = publicRoutes.includes(currentPath);
+
+    // If user not logged in and it's not a public route, push to "/"
+    if (!userInfo && !isPublicRoute) {
+      navigate("/");
     } else {
       setUser(userInfo);
       const yt_access_token_cookie = Cookies.get("yt_access_token");

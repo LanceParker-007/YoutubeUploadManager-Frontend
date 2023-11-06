@@ -68,7 +68,7 @@ const SigninForm = () => {
         bg={"whitesmoke"}
       >
         *Only Google Accounts allowed by developer will be able to upload videos
-        to youtube. <br />
+        to youtube larger than 40mb. <br />
       </Box>
     </Container>
   );

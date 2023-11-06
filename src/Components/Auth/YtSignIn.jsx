@@ -2,6 +2,13 @@ import Cookies from "js-cookie";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AES from "crypto-js/aes";
+
+const secretKey = "secretKey"; // Replace with your actual key, stored securely
+
+const encryptToken = (token) => {
+  return AES.encrypt(token, secretKey).toString();
+};
 
 const YtSignIn = () => {
   const navigate = useNavigate();
@@ -23,12 +30,15 @@ const YtSignIn = () => {
         hashObject[key] = value;
       }
 
-      // Store the hashObject in sessionStorage
-      const expiryTime = 1 / 24;
-      sessionStorage.setItem("hashData", JSON.stringify(hashObject));
-      Cookies.set("yt_access_token", hashObject["access_token"], {
-        expires: expiryTime,
-      });
+      // Encrypt the token before storing it
+      const encryptedToken = encryptToken(hashObject["access_token"]);
+      sessionStorage.setItem(
+        "hashData",
+        JSON.stringify({ ...hashObject, access_token: encryptedToken })
+      );
+      const expiryTime = 1 / 24; // Token expires in 1 hour
+      //Store the token in cookies
+      Cookies.set("yt_access_token", encryptedToken, { expires: expiryTime });
 
       navigate("/workspace");
     };
@@ -40,7 +50,7 @@ const YtSignIn = () => {
   }, [navigate]);
 
   if (loading) {
-    return <h1>Loading..</h1>;
+    return <h1>Signing in to your YouTube account..</h1>;
   }
   return <h1>Sign in failed</h1>;
 };

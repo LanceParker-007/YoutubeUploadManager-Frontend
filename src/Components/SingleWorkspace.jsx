@@ -68,7 +68,7 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
   };
 
   //Upload Video to YouTube function will also act on userServer
-  const uploadToYoutube = async (videoId) => {
+  const uploadToYoutube = async (videoId, videoUrl) => {
     if (!userServer || userServer.length === 0) {
       toast({
         title: "Connect to a server first!",
@@ -81,28 +81,31 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
     }
 
     const selectedWorkspaceId = selectedWorkspace._id;
+    // console.log(accessToken);
     try {
-      // console.log(userServer);
       setUploadToYtBtnloading(true);
-      const { data } = await axios.post(
-        `${userServer}/api/youtubecontrol/uploadvideotoyoutube`, //clientserver_url
+      // Working serverless
+      // const response = await axios.post(
+      //   `https://9h0ejhqbgk.execute-api.ap-south-1.amazonaws.com/dev/api/youtubecontrol/uploadvideotoyoutube`,
+      //   { accessToken, selectedWorkspaceId, videoId }
+      // );
+
+      // Working normal
+      const response = await axios.post(
+        `${server}/api/youtubecontrol/uploadvideotoyoutube`,
         {
-          selectedWorkspaceId: selectedWorkspaceId,
-          videoId: videoId,
-          accessToken: accessToken,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            "Content-Type": "application/json",
-          },
+          accessToken,
+          selectedWorkspaceId,
+          videoId,
         }
       );
+
+      console.log(response);
 
       fetchAllVideoDetails();
       setUploadToYtBtnloading(false);
       toast({
-        title: `${data.message}`,
+        title: `${response.data.message}`,
         status: "success",
         duration: 4000,
         isClosable: true,
@@ -113,7 +116,6 @@ const SingleWorkspace = ({ fetchAgain, setFetchAgain }) => {
       setUploadToYtBtnloading(false);
       toast({
         title: "Video upload to Yt failed",
-        description: error.message,
         status: "error",
         duration: 4000,
         isClosable: true,

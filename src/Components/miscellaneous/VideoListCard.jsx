@@ -87,7 +87,7 @@ const VideoListCard = ({
               <Button
                 isLoading={uploadToYtBtnloading}
                 colorScheme={"yellow"}
-                onClick={() => uploadToYoutube(video._id)}
+                onClick={() => uploadToYoutube(video._id, video.video.url)}
                 rightIcon={<FaYoutube size={"2rem"} color="red" />}
                 width={"10rem"}
               >
