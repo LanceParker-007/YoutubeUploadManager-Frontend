@@ -56,5 +56,3 @@ const YtSignIn = () => {
 };
 
 export default YtSignIn;
-
-// http://localhost:3000/ytsignin/callback#state=pass-through-value&access_token=ya29.a0AfB_byBdC-C77XRVCzqA1LaOAeY5WCR4V_Kp2A5g7kBzeXq1djq7YRAdqCJdp88Uv2Wquy18RoeHtXEHHvgfqVS8Xo5BKV-VTJp_xmv_A7I14Uwkf769hj538Rn4Ba6TWyVnXoMzAUJqTRr58dCNUs3RD7r5sfpfwgaCgYKAa0SARESFQGOcNnC_rAKHKSdopiPlnbzf_cxxA0169&token_type=Bearer&expires_in=3599&scope=email%20profile%20https://www.googleapis.com/auth/userinfo.email%20openid%20https://www.googleapis.com/auth/youtube.upload%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/youtube.force-ssl&authuser=0&prompt=consent

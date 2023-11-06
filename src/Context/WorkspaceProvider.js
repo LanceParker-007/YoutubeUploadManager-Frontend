@@ -28,7 +28,7 @@ const WorkspaceContextProvider = ({ children }) => {
 
     let params = {
       client_id: process.env.REACT_APP_CLIENT_ID,
-      redirect_uri: process.env.REACT_APP_DEV_REDIRECT_URI,
+      redirect_uri: process.env.REACT_APP_PROD_REDIRECT_URI,
       response_type: "token",
       scope: [
         "https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
